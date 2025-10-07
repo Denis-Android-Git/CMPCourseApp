@@ -11,7 +11,7 @@ androidDesugarJdkLibs = "2.1.5"
 androidTools = "31.13.0"
 
 # Compose
-compose-hot-reload = "1.0.0-beta08"
+compose-hot-reload = "1.0.0-rc01"
 compose-multiplatform = "1.9.0"
 # Maintain compose multiplatform version aligned with navigation, cache error could happen
 compose-lifecycle = "2.9.4"
@@ -212,5 +212,6 @@ ktor-common = [
     "ktor-client-core",
     "ktor-client-content-negotiation",
     "ktor-serialization-kotlinx-json",
-    "ktor-client-auth"
+    "ktor-client-auth",
+    "ktor-client-logging"
 ]
