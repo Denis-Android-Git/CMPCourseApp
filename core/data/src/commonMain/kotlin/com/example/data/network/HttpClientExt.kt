@@ -86,8 +86,8 @@ suspend inline fun <reified Response : Any> HttpClient.delete(
 fun constructRoute(route: String): String {
     return when {
         route.contains(UrlConstant.BASE_URL) -> route
-        route.startsWith("/") -> "{UrlConstant.BASE_URL}$route"
-        else -> "{UrlConstant.BASE_URL}/$route"
+        route.startsWith("/") -> "${UrlConstant.BASE_URL}$route"
+        else -> "${UrlConstant.BASE_URL}/$route"
     }
 }
 

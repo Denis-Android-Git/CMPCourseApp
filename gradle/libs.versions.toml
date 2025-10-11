@@ -50,6 +50,8 @@ buildkonfig = "0.17.1"
 runner = "1.7.0"
 junit = "1.3.0"
 material-icons = "1.7.3"
+kermit = "2.0.8"
+
 
 projectApplicationId = "com.example.cmpcourseapp"
 projectVersionName = "1.0"
@@ -70,6 +72,9 @@ androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+
+# Logging
+touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 # AndroidX Core
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
