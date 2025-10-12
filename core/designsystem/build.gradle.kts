@@ -8,6 +8,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+
             }
         }
 

@@ -10,6 +10,8 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(projects.core.domain)
                 implementation(compose.components.resources)
+
+                implementation(libs.material3.adaptive )
             }
         }
         androidMain {
