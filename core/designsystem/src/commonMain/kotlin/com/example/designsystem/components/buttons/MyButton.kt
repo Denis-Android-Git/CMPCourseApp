@@ -19,7 +19,7 @@ import com.example.designsystem.theme.ChirpTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class ChirpButtonStyle {
+enum class MyButtonStyle {
     PRIMARY,
     SECONDARY,
     DELETE_PRIMARY,
@@ -28,45 +28,45 @@ enum class ChirpButtonStyle {
 }
 
 @Composable
-fun ChirpButton(
+fun MyButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    style: ChirpButtonStyle = ChirpButtonStyle.PRIMARY,
+    style: MyButtonStyle = MyButtonStyle.PRIMARY,
     enabled: Boolean = true,
     loading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null
 ) {
     val colors = when (style) {
-        ChirpButtonStyle.PRIMARY -> ButtonDefaults.buttonColors(
+        MyButtonStyle.PRIMARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             disabledContainerColor = MaterialTheme.colorScheme.extended.disabledFill,
             disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
         )
 
-        ChirpButtonStyle.SECONDARY -> ButtonDefaults.buttonColors(
+        MyButtonStyle.SECONDARY -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.extended.textSecondary,
             disabledContainerColor = Color.Transparent,
             disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
         )
 
-        ChirpButtonStyle.DELETE_PRIMARY -> ButtonDefaults.buttonColors(
+        MyButtonStyle.DELETE_PRIMARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.error,
             contentColor = MaterialTheme.colorScheme.onError,
             disabledContainerColor = MaterialTheme.colorScheme.extended.disabledFill,
             disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
         )
 
-        ChirpButtonStyle.DELETE_SECONDARY -> ButtonDefaults.buttonColors(
+        MyButtonStyle.DELETE_SECONDARY -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.error,
             disabledContainerColor = Color.Transparent,
             disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
         )
 
-        ChirpButtonStyle.TEXT -> ButtonDefaults.buttonColors(
+        MyButtonStyle.TEXT -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.tertiary,
             disabledContainerColor = Color.Transparent,
@@ -80,10 +80,10 @@ fun ChirpButton(
     )
 
     val border = when {
-        style == ChirpButtonStyle.PRIMARY && !enabled -> defaultBorder
-        style == ChirpButtonStyle.SECONDARY -> defaultBorder
-        style == ChirpButtonStyle.DELETE_PRIMARY && !enabled -> defaultBorder
-        style == ChirpButtonStyle.DELETE_SECONDARY -> {
+        style == MyButtonStyle.PRIMARY && !enabled -> defaultBorder
+        style == MyButtonStyle.SECONDARY -> defaultBorder
+        style == MyButtonStyle.DELETE_PRIMARY && !enabled -> defaultBorder
+        style == MyButtonStyle.DELETE_SECONDARY -> {
             val borderColor = if (enabled) MaterialTheme.colorScheme.extended.destructiveSecondaryOutline else MaterialTheme.colorScheme.extended.disabledOutline
             BorderStroke(
                 width = 1.dp,
@@ -135,7 +135,7 @@ fun ChirpPrimaryButtonPreview() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpButton(text = "Button", onClick = {})
+        MyButton(text = "Button", onClick = {})
     }
 }
 
@@ -145,7 +145,7 @@ fun ChirpSecondaryButtonPreview() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpButton(text = "Button", onClick = {}, style = ChirpButtonStyle.SECONDARY)
+        MyButton(text = "Button", onClick = {}, style = MyButtonStyle.SECONDARY)
     }
 }
 
@@ -155,7 +155,7 @@ fun ChirpDeletePrimaryButtonPreview() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpButton(text = "Button", onClick = {}, style = ChirpButtonStyle.DELETE_PRIMARY)
+        MyButton(text = "Button", onClick = {}, style = MyButtonStyle.DELETE_PRIMARY)
     }
 }
 
@@ -165,7 +165,7 @@ fun ChirpDeleteSecondaryButtonPreview() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpButton(text = "Button", onClick = {}, style = ChirpButtonStyle.DELETE_SECONDARY)
+        MyButton(text = "Button", onClick = {}, style = MyButtonStyle.DELETE_SECONDARY)
     }
 }
 
@@ -175,6 +175,6 @@ fun ChirpTextButtonPreview() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpButton(text = "Button", onClick = {}, style = ChirpButtonStyle.TEXT)
+        MyButton(text = "Button", onClick = {}, style = MyButtonStyle.TEXT)
     }
 }
