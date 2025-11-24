@@ -1,56 +1,21 @@
 package com.example.cmpcourseapp
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import cmpcourseapp.composeapp.generated.resources.Res
-import cmpcourseapp.composeapp.generated.resources.compose_multiplatform
-import com.example.designsystem.components.buttons.MyButton
-import com.example.designsystem.components.buttons.MyButtonStyle
-import com.example.designsystem.theme.ChirpTheme
-import org.jetbrains.compose.resources.painterResource
+import androidx.navigation.compose.rememberNavController
+import com.example.cmpcourseapp.navigation.DeepLinkListener
+import com.example.cmpcourseapp.navigation.NavigationRoot
+import com.example.designsystem.theme.MyTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    ChirpTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            MyButton(
-                onClick = { showContent = !showContent },
-                text = "Click me!",
-                style = MyButtonStyle.DELETE_PRIMARY,
-            )
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
-        }
+    val navController = rememberNavController()
+    DeepLinkListener(
+        navController = navController
+    )
+
+    MyTheme {
+        NavigationRoot(navController)
     }
 }

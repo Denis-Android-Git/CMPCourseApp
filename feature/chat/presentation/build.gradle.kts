@@ -13,7 +13,13 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.designsystem)
 
+                implementation(projects.core.data) //!!!not needed
 
+
+
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.bundles.koin.common)
             }
         }
         androidMain {

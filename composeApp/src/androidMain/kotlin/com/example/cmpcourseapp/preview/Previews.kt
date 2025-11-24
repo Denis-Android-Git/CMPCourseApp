@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.designsystem.components.brand.Logo
 import com.example.designsystem.components.layouts.MyAdaptiveFormLayout
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 
 @Composable
 @PreviewLightDark
@@ -17,7 +17,7 @@ import com.example.designsystem.theme.ChirpTheme
     device = Devices.NEXUS_10
 )
 fun MyAdaptiveFormLayoutPreview() {
-    ChirpTheme {
+    MyTheme {
         MyAdaptiveFormLayout(
             headerText = "Header Text",
             errorText = "Error Text",

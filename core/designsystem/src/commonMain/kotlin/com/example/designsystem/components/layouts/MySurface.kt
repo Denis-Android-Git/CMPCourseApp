@@ -17,8 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cmpcourseapp.core.designsystem.generated.resources.Res
-import cmpcourseapp.core.designsystem.generated.resources.logo_chirp
-import com.example.designsystem.theme.ChirpTheme
+import cmpcourseapp.core.designsystem.generated.resources.logo
+import com.example.designsystem.theme.MyTheme
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -57,12 +57,12 @@ fun MySurface(
 @Composable
 @Preview
 fun MySurfacePreview() {
-    ChirpTheme {
+    MyTheme {
         MySurface(
             modifier = Modifier.fillMaxSize(),
             header = {
                 Icon(
-                    imageVector = vectorResource(Res.drawable.logo_chirp),
+                    imageVector = vectorResource(Res.drawable.logo),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 32.dp)

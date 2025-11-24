@@ -28,7 +28,7 @@ import cmpcourseapp.core.designsystem.generated.resources.eye_icon
 import cmpcourseapp.core.designsystem.generated.resources.eye_off_icon
 import cmpcourseapp.core.designsystem.generated.resources.hide_password
 import cmpcourseapp.core.designsystem.generated.resources.show_password
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -119,7 +119,7 @@ fun MyPasswordTextField(
 @Composable
 @Preview(showBackground = true)
 fun MyPasswordTextFieldPreview() {
-    ChirpTheme {
+    MyTheme {
         MyPasswordTextField(
             modifier = Modifier.width(300.dp),
             state = rememberTextFieldState("password123"),
@@ -137,7 +137,7 @@ fun MyPasswordTextFieldPreview() {
 @Composable
 @Preview(showBackground = true)
 fun MyPasswordTextFieldEmptyPreview() {
-    ChirpTheme {
+    MyTheme {
         MyPasswordTextField(
             modifier = Modifier.width(300.dp),
             state = rememberTextFieldState("sdsds"),
@@ -155,7 +155,7 @@ fun MyPasswordTextFieldEmptyPreview() {
 @Composable
 @Preview(showBackground = true)
 fun MyPasswordTextFieldErrorPreview() {
-    ChirpTheme {
+    MyTheme {
         MyPasswordTextField(
             modifier = Modifier.width(300.dp),
             state = rememberTextFieldState("password123"),

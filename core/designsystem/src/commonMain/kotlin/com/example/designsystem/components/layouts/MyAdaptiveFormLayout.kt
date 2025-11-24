@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.brand.Logo
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.currentDeviceConfiguration
@@ -69,9 +75,10 @@ fun MyAdaptiveFormLayout(
         DeviceConfiguration.MOBILE_LANDSCAPE -> {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = modifier.fillMaxSize().consumeWindowInsets(WindowInsets.displayCutout)
+                modifier = modifier.fillMaxSize()
+                    .consumeWindowInsets(WindowInsets.displayCutout)
                     .background(color = MaterialTheme.colorScheme.background)
-
+                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())//для того, чтобы поле ввода не наезжало на нижние кнопки навигации.
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
@@ -79,12 +86,17 @@ fun MyAdaptiveFormLayout(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     logo()
-                    AuthHeaderSection(headerText = headerText, color = headerColor, errorText = errorText)
+                    AuthHeaderSection(
+                        headerText = headerText, color = headerColor, errorText = errorText,
+                        textAlign = TextAlign.Start
+                    )
                 }
                 MySurface(
                     modifier = Modifier.weight(1f)
                 ) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     content()
+                    Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars)) //чтобы полоска не перекрывала кнопку
                 }
             }
         }
@@ -107,8 +119,8 @@ fun MyAdaptiveFormLayout(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(32.dp))
                         .background(MaterialTheme.colorScheme.surface)
+                        .verticalScroll(rememberScrollState())
                         .padding(horizontal = 24.dp, vertical = 32.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AuthHeaderSection(
@@ -127,13 +139,14 @@ fun MyAdaptiveFormLayout(
 fun ColumnScope.AuthHeaderSection(
     headerText: String,
     color: Color,
-    errorText: String? = null
+    errorText: String? = null,
+    textAlign: TextAlign = TextAlign.Center
 ) {
     Text(
         text = headerText,
         style = MaterialTheme.typography.titleLarge,
         color = color,
-        textAlign = TextAlign.Center,
+        textAlign = textAlign,
         modifier = Modifier.fillMaxWidth()
     )
     AnimatedVisibility(visible = errorText != null) {
@@ -141,7 +154,7 @@ fun ColumnScope.AuthHeaderSection(
             text = errorText ?: "",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.error,
-            textAlign = TextAlign.Center,
+            textAlign = textAlign,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -151,7 +164,7 @@ fun ColumnScope.AuthHeaderSection(
 @Composable
 @Preview
 fun MyAdaptiveFormLayoutPreview() {
-    ChirpTheme(darkTheme = true) {
+    MyTheme(darkTheme = true) {
         MyAdaptiveFormLayout(
             headerText = "Header Text",
             errorText = "Error Text",

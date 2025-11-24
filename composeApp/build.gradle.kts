@@ -8,6 +8,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(projects.core.data)
@@ -29,6 +30,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
+            implementation(libs.jetbrains.compose.navigation)
+
+        }
+        iosMain.dependencies {
+            api(project(":core:domain")) //access to core/data in Xcode
+
         }
     }
 }

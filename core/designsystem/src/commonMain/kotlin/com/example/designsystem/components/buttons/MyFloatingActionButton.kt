@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -31,7 +31,7 @@ fun MyFloatingActionButton(
 @Composable
 @Preview
 fun MyFloatingActionButtonPreview() {
-    ChirpTheme(
+    MyTheme(
         darkTheme = true
     ) {
         MyFloatingActionButton(onClick = {}) {

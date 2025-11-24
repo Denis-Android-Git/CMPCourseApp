@@ -5,7 +5,8 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal fun Project.configureIosTargets() {
-    extensions.configure<KotlinMultiplatformExtension>() {
+    extensions.configure<KotlinMultiplatformExtension> {
+
         listOf(
             iosX64(),
             iosArm64(),
@@ -14,6 +15,9 @@ internal fun Project.configureIosTargets() {
             iosTarget.binaries.framework {
                 baseName = "ComposeApp"
                 isStatic = true
+
+                export(project(":core:domain")) //access to core/data in Xcode
+
             }
         }
     }

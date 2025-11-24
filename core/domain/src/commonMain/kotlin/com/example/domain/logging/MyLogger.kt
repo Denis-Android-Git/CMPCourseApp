@@ -1,6 +1,6 @@
 package com.example.domain.logging
 
-interface ChirpLogger {
+interface MyLogger {
     fun info(message: String)
     fun error(message: String, throwable: Throwable? = null)
     fun warn(message: String)

@@ -1,6 +1,7 @@
 package com.example.designsystem.components.layouts
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,16 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.brand.SuccessIcon
 import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SimpleSuccessLayout(
+fun SimpleResultLayout(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    icon: @Composable () -> Unit,
+    secondaryError: String? = null,
+    icon: @Composable ColumnScope.() -> Unit,
     primaryButton: @Composable () -> Unit,
     secondaryButton: (@Composable () -> Unit)? = null
 ) {
@@ -58,6 +60,15 @@ fun SimpleSuccessLayout(
             secondaryButton?.let {
                 Spacer(modifier = Modifier.height(8.dp))
                 it()
+                secondaryError?.let { error ->
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = error, modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme. error
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -68,10 +79,11 @@ fun SimpleSuccessLayout(
 @Composable
 @Preview(showBackground = true)
 fun SimpleSuccessLayoutPreview() {
-    ChirpTheme(darkTheme = false) {
-        SimpleSuccessLayout(
+    MyTheme(darkTheme = false) {
+        SimpleResultLayout(
             title = "Success",
             description = "Your action was completed successfully.",
+            secondaryError = "Optional error message",
             icon = {
                 SuccessIcon()
             },

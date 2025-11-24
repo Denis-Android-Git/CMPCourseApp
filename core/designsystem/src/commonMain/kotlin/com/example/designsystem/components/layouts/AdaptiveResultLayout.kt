@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.brand.Logo
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -80,7 +80,7 @@ fun AdaptiveResultLayout(
 @Composable
 @Preview
 fun AdaptiveResultLayoutPreview() {
-    ChirpTheme(darkTheme = true) {
+    MyTheme(darkTheme = true) {
         AdaptiveResultLayout(
             content = {
                 Text("Hello World")

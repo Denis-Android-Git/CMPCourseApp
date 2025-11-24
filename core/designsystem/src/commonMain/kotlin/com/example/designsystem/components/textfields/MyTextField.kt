@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -77,7 +77,7 @@ fun MyTextField(
 @Composable
 @Preview(showBackground = true)
 fun MyTextFieldPreview() {
-    ChirpTheme {
+    MyTheme {
         MyTextField(
             modifier = Modifier.width(300.dp),
             state = rememberTextFieldState("Initial text"),
@@ -95,7 +95,7 @@ fun MyTextFieldPreview() {
 @Composable
 @Preview(showBackground = true)
 fun MyTextFieldErrorPreview() {
-    ChirpTheme {
+    MyTheme {
         MyTextField(
             modifier = Modifier.width(300.dp),
             state = rememberTextFieldState(""),

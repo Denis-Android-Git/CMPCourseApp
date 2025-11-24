@@ -3,6 +3,7 @@ package com.example.designsystem.components.buttons
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -15,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.theme.ChirpTheme
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -102,7 +103,8 @@ fun MyButton(
         border = border
     ) {
         Box(
-            contentAlignment = androidx.compose.ui.Alignment.Center
+            contentAlignment = androidx.compose.ui.Alignment.Center,
+            modifier = Modifier.padding(6.dp)
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(15.dp).alpha(
@@ -131,18 +133,18 @@ fun MyButton(
 
 @Composable
 @Preview
-fun ChirpPrimaryButtonPreview() {
-    ChirpTheme(
+fun PrimaryButtonPreview() {
+    MyTheme(
         darkTheme = true
     ) {
-        MyButton(text = "Button", onClick = {})
+        MyButton(text = "Button", onClick = {}, loading = true)
     }
 }
 
 @Composable
 @Preview
-fun ChirpSecondaryButtonPreview() {
-    ChirpTheme(
+fun SecondaryButtonPreview() {
+    MyTheme(
         darkTheme = true
     ) {
         MyButton(text = "Button", onClick = {}, style = MyButtonStyle.SECONDARY)
@@ -151,8 +153,8 @@ fun ChirpSecondaryButtonPreview() {
 
 @Composable
 @Preview
-fun ChirpDeletePrimaryButtonPreview() {
-    ChirpTheme(
+fun DeletePrimaryButtonPreview() {
+    MyTheme(
         darkTheme = true
     ) {
         MyButton(text = "Button", onClick = {}, style = MyButtonStyle.DELETE_PRIMARY)
@@ -161,8 +163,8 @@ fun ChirpDeletePrimaryButtonPreview() {
 
 @Composable
 @Preview
-fun ChirpDeleteSecondaryButtonPreview() {
-    ChirpTheme(
+fun DeleteSecondaryButtonPreview() {
+    MyTheme(
         darkTheme = true
     ) {
         MyButton(text = "Button", onClick = {}, style = MyButtonStyle.DELETE_SECONDARY)
@@ -171,8 +173,8 @@ fun ChirpDeleteSecondaryButtonPreview() {
 
 @Composable
 @Preview
-fun ChirpTextButtonPreview() {
-    ChirpTheme(
+fun TextButtonPreview() {
+    MyTheme(
         darkTheme = true
     ) {
         MyButton(text = "Button", onClick = {}, style = MyButtonStyle.TEXT)

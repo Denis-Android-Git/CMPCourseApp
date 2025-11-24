@@ -96,7 +96,7 @@ suspend inline fun <reified T> responseToResult(response: HttpResponse): CustomR
         in 200..299 -> {
             try {
                 CustomResult.Success(response.body<T>())
-            } catch (e: NoTransformationFoundException) {
+            } catch (_: NoTransformationFoundException) {
                 CustomResult.Failure(DataError.Remote.SERIALIZATION_ERROR)
             }
         }
