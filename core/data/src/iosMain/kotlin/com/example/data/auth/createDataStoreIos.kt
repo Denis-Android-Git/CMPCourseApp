@@ -17,6 +17,6 @@ fun createDataStore(): DataStore<Preferences> {
             create = false,
             error = null
         )
-        requireNotNull(directory).path + "/$DATA_STORE_NAME"
+        requireNotNull(directory).path + "/$DATA_STORE_FILE_NAME"
     }
 }

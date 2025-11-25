@@ -9,12 +9,11 @@ import Foundation
 import ComposeApp
 
 func setupEncryption() {
-    let aes = AES()
     EncryptionHandler().encrypt { data in
-        return aes.encrypt(data)
+        return IosEncryptor.encrypt(data)
     }
 
     EncryptionHandler().decrypt { encryptedData in
-        return aes.decrypt(encryptedData)
+        return IosEncryptor.decrypt(encryptedData)
     }
 }

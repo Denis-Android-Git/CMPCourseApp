@@ -10,13 +10,15 @@ import com.example.data.mappers.toSerializable
 import com.example.domain.auth.AuthInfo
 import com.example.domain.auth.Crypto
 import com.example.domain.auth.SessionStorage
+import com.example.domain.logging.MyLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 class DataStoreSessionStorage(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val myLogger: MyLogger
 ) : SessionStorage {
     private val json = Json {
         ignoreUnknownKeys = true
@@ -27,7 +29,9 @@ class DataStoreSessionStorage(
     override fun observeAuthInfo(): Flow<AuthInfo?> {
         return dataStore.data.map { prefs ->
             prefs[authInfoKey]?.let {
+                myLogger.debug("Decrypted_auth_info: $it")
                 val decryptedString = Crypto.decrypt(it)
+                myLogger.debug("Decrypted_auth_info decryptedString: $decryptedString")
                 val authInfoSerializable: AuthInfoSerializable = json.decodeFromString(decryptedString)
                 authInfoSerializable.toDomain()
             }
@@ -44,6 +48,7 @@ class DataStoreSessionStorage(
         }
         val serialized = json.encodeToString(info.toSerializable())
         val encryptedString = Crypto.encrypt(serialized)
+        myLogger.debug("Decrypted_auth_info: $encryptedString")
         dataStore.edit {
             it[authInfoKey] = encryptedString
         }
