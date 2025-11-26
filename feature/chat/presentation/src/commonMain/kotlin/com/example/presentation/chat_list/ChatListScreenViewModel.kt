@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.mappers.toSerializable
 import com.example.domain.auth.Crypto
 import com.example.domain.auth.SessionStorage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -32,6 +33,13 @@ class ChatListScreenViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = ChatListScreenState()
         )
+
+    init {
+        viewModelScope.launch {
+            delay(5000)
+            sessionStorage.set(null)
+        }
+    }
 
     fun onAction(action: ChatListScreenAction) {
         when (action) {
