@@ -20,4 +20,6 @@ interface AuthService {
         password: String
     ): CustomResult<AuthInfo, DataError.Remote>
 
+    suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote>
+
 }

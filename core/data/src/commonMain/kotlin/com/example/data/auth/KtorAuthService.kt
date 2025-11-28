@@ -59,4 +59,13 @@ class KtorAuthService(
         }
     }
 
+    override suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote> {
+        return httpClient.post<EmailRequest, Unit>(
+            route = "/auth/forgot-password",
+            body = EmailRequest(
+                email = email
+            )
+        )
+    }
+
 }
