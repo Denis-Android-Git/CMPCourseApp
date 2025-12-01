@@ -7,10 +7,10 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.example.presentation.email_verification.EmailVerificationScreenRoot
 import com.example.presentation.forgot_password.ForgotPasswordRoot
-import com.example.presentation.forgot_password.ForgotPasswordScreen
 import com.example.presentation.login.LoginRoot
 import com.example.presentation.register.RegisterRoot
 import com.example.presentation.register_success.RegisterSuccessRoot
+import com.example.presentation.reset_password.ResetPasswordRoot
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -98,6 +98,18 @@ fun NavGraphBuilder.authGraph(
         }
         composable<AuthGraphRoutes.ForgotPassword> {
             ForgotPasswordRoot()
+        }
+        composable<AuthGraphRoutes.ResetPassword>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern = "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern = "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                }
+            )
+        ) {
+            ResetPasswordRoot()
         }
     }
 }

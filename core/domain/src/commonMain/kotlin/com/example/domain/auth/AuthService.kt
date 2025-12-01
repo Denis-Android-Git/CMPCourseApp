@@ -21,5 +21,9 @@ interface AuthService {
     ): CustomResult<AuthInfo, DataError.Remote>
 
     suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote>
+    suspend fun resetPassword(
+        token: String,
+        password: String
+    ): EmptyResult<DataError.Remote>
 
 }
