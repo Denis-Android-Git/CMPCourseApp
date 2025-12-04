@@ -31,6 +31,7 @@ import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
 import com.example.designsystem.components.layouts.AdaptiveResultLayout
 import com.example.designsystem.components.layouts.SimpleResultLayout
+import com.example.designsystem.components.layouts.SnackBarScaffold
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
@@ -62,49 +63,51 @@ fun EmailVerificationScreen(
     state: EmailVerificationScreenState,
     onAction: (EmailVerificationScreenAction) -> Unit,
 ) {
-    AdaptiveResultLayout {
-        when {
-            state.isVarifying -> VerifyContent(
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            state.isEmailVerified -> {
-                SimpleResultLayout(
-                    title = stringResource(Res.string.email_verified_successfully),
-                    description = stringResource(Res.string.email_verified_successfully_desc),
-                    icon = {
-                        SuccessIcon()
-                    },
-                    primaryButton = {
-                        MyButton(
-                            text = stringResource(Res.string.login),
-                            onClick = { onAction(EmailVerificationScreenAction.OnLoginClick) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+    SnackBarScaffold {
+        AdaptiveResultLayout {
+            when {
+                state.isVarifying -> VerifyContent(
+                    modifier = Modifier.fillMaxWidth()
                 )
-            }
 
-            else -> {
-                SimpleResultLayout(
-                    title = stringResource(Res.string.email_verified_failed),
-                    description = stringResource(Res.string.email_verified_failed_desc),
-                    icon = {
-                        Spacer(modifier = Modifier.height(32.dp))
-                        FailureIcon(
-                            modifier = Modifier.size(80.dp)
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
-                    },
-                    primaryButton = {
-                        MyButton(
-                            text = stringResource(Res.string.close),
-                            onClick = { onAction(EmailVerificationScreenAction.OnCloseClick) },
-                            modifier = Modifier.fillMaxWidth(),
-                            style = MyButtonStyle.SECONDARY
-                        )
-                    }
-                )
+                state.isEmailVerified -> {
+                    SimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_successfully),
+                        description = stringResource(Res.string.email_verified_successfully_desc),
+                        icon = {
+                            SuccessIcon()
+                        },
+                        primaryButton = {
+                            MyButton(
+                                text = stringResource(Res.string.login),
+                                onClick = { onAction(EmailVerificationScreenAction.OnLoginClick) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    )
+                }
+
+                else -> {
+                    SimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_failed),
+                        description = stringResource(Res.string.email_verified_failed_desc),
+                        icon = {
+                            Spacer(modifier = Modifier.height(32.dp))
+                            FailureIcon(
+                                modifier = Modifier.size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                        },
+                        primaryButton = {
+                            MyButton(
+                                text = stringResource(Res.string.close),
+                                onClick = { onAction(EmailVerificationScreenAction.OnCloseClick) },
+                                modifier = Modifier.fillMaxWidth(),
+                                style = MyButtonStyle.SECONDARY
+                            )
+                        }
+                    )
+                }
             }
         }
     }

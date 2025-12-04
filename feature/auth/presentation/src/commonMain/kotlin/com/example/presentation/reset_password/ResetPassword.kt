@@ -20,6 +20,7 @@ import cmpcourseapp.feature.auth.presentation.generated.resources.submit
 import com.example.designsystem.components.brand.Logo
 import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.layouts.MyAdaptiveFormLayout
+import com.example.designsystem.components.layouts.SnackBarScaffold
 import com.example.designsystem.components.textfields.MyPasswordTextField
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
@@ -44,43 +45,45 @@ fun ResetPasswordScreen(
     state: ResetPasswordState,
     onAction: (ResetPasswordAction) -> Unit,
 ) {
-    MyAdaptiveFormLayout(
-        headerText = stringResource(Res.string.set_new_password),
-        errorText = state.error?.asString(),
-        logo = {
-            Logo()
-        },
-    ) {
-        MyPasswordTextField(
-            state = state.passwordState,
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = stringResource(Res.string.password),
-            title = stringResource(Res.string.password),
-            supportingText = stringResource(Res.string.password_hint),
-            isPasswordVisible = state.isPasswordVisible,
-            onVisibilityClick = {
-                onAction(ResetPasswordAction.OnVisibilityClick)
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MyButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(Res.string.submit),
-            onClick = {
-                onAction(ResetPasswordAction.OnSubmitClick)
+    SnackBarScaffold {
+        MyAdaptiveFormLayout(
+            headerText = stringResource(Res.string.set_new_password),
+            errorText = state.error?.asString(),
+            logo = {
+                Logo()
             },
-            enabled = !state.isLoading && state.canSubmit,
-            loading = state.isLoading
-        )
-        if (state.isSuccess) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(Res.string.reset_password_successfully),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.extended.success,
+        ) {
+            MyPasswordTextField(
+                state = state.passwordState,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                placeholder = stringResource(Res.string.password),
+                title = stringResource(Res.string.password),
+                supportingText = stringResource(Res.string.password_hint),
+                isPasswordVisible = state.isPasswordVisible,
+                onVisibilityClick = {
+                    onAction(ResetPasswordAction.OnVisibilityClick)
+                }
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            MyButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(Res.string.submit),
+                onClick = {
+                    onAction(ResetPasswordAction.OnSubmitClick)
+                },
+                enabled = !state.isLoading && state.canSubmit,
+                loading = state.isLoading
+            )
+            if (state.isSuccess) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(Res.string.reset_password_successfully),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.extended.success,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

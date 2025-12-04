@@ -36,6 +36,7 @@ import com.example.designsystem.components.brand.Logo
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.presentation.util.DeviceConfiguration
+import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -57,7 +58,9 @@ fun MyAdaptiveFormLayout(
     when (configuration) {
         DeviceConfiguration.MOBILE_PORTRAIT -> {
             MySurface(
-                modifier = modifier.consumeWindowInsets(WindowInsets.navigationBars)
+                modifier = modifier
+                    .clearFocusOnTap()
+                    .consumeWindowInsets(WindowInsets.navigationBars)
                     .consumeWindowInsets(WindowInsets.displayCutout),
                 header = {
                     Spacer(modifier = Modifier.height(32.dp))

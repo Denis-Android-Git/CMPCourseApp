@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpcourseapp.feature.auth.presentation.generated.resources.Res
 import cmpcourseapp.feature.auth.presentation.generated.resources.create_account
 import cmpcourseapp.feature.auth.presentation.generated.resources.email
@@ -27,6 +26,7 @@ import com.example.designsystem.components.brand.Logo
 import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
 import com.example.designsystem.components.layouts.MyAdaptiveFormLayout
+import com.example.designsystem.components.layouts.SnackBarScaffold
 import com.example.designsystem.components.textfields.MyPasswordTextField
 import com.example.designsystem.components.textfields.MyTextField
 import com.example.designsystem.theme.MyTheme
@@ -68,63 +68,65 @@ fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit,
 ) {
-    MyAdaptiveFormLayout(
-        headerText = stringResource(Res.string.welcome_back),
-        errorText = state.error?.asString(),
-        logo = {
-            Logo()
-        },
-        modifier = Modifier.fillMaxSize()
-    ) {
-        MyTextField(
-            state = state.emailTextFieldState,
-            placeholder = stringResource(Res.string.email_placeholder),
-            keyboardType = KeyboardType.Email,
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(Res.string.email)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MyPasswordTextField(
-            state = state.passwordTextFieldState,
-            placeholder = stringResource(Res.string.password),
-            modifier = Modifier.fillMaxWidth(),
-            isPasswordVisible = state.isPasswordVisible,
-            onVisibilityClick = {
-                onAction(LoginAction.OnTogglePasswordVisibility)
+    SnackBarScaffold {
+        MyAdaptiveFormLayout(
+            headerText = stringResource(Res.string.welcome_back),
+            errorText = state.error?.asString(),
+            logo = {
+                Logo()
             },
-            title = stringResource(Res.string.password)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = stringResource(Res.string.forgot_password),
-            modifier = Modifier.align(Alignment.End)
-                .clickable {
-                    onAction(LoginAction.OnForgotPasswordClick)
+            modifier = Modifier.fillMaxSize()
+        ) {
+            MyTextField(
+                state = state.emailTextFieldState,
+                placeholder = stringResource(Res.string.email_placeholder),
+                keyboardType = KeyboardType.Email,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(Res.string.email)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            MyPasswordTextField(
+                state = state.passwordTextFieldState,
+                placeholder = stringResource(Res.string.password),
+                modifier = Modifier.fillMaxWidth(),
+                isPasswordVisible = state.isPasswordVisible,
+                onVisibilityClick = {
+                    onAction(LoginAction.OnTogglePasswordVisibility)
                 },
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+                title = stringResource(Res.string.password)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(Res.string.forgot_password),
+                modifier = Modifier.align(Alignment.End)
+                    .clickable {
+                        onAction(LoginAction.OnForgotPasswordClick)
+                    },
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Spacer(modifier = Modifier.height(24.dp))
 
-        MyButton(
-            text = stringResource(Res.string.login),
-            onClick = {
-                onAction(LoginAction.OnLoginClick)
-            },
-            enabled = state.canLogin,
-            modifier = Modifier.fillMaxWidth(),
-            loading = state.isLoggingIn
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        MyButton(
-            text = stringResource(Res.string.create_account),
-            onClick = {
-                onAction(LoginAction.OnSignUpClick)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            style = MyButtonStyle.SECONDARY
-        )
+            MyButton(
+                text = stringResource(Res.string.login),
+                onClick = {
+                    onAction(LoginAction.OnLoginClick)
+                },
+                enabled = state.canLogin,
+                modifier = Modifier.fillMaxWidth(),
+                loading = state.isLoggingIn
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            MyButton(
+                text = stringResource(Res.string.create_account),
+                onClick = {
+                    onAction(LoginAction.OnSignUpClick)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                style = MyButtonStyle.SECONDARY
+            )
+        }
     }
 }
 
