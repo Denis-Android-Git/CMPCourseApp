@@ -33,8 +33,8 @@ fun MyChatBubble(
     formattedTime: String,
     color: Color = MaterialTheme.colorScheme.extended.surfaceHigher,
     messageStatus: @Composable (() -> Unit)? = null,
-    triangleSize: Dp = 16.dp,
-    trianglePosition: TrianglePosition = TrianglePosition.LEFT,
+    triangleSize: Dp = 12.dp,
+    trianglePosition: TrianglePosition,
     onLongClick: (() -> Unit)? = null
 ) {
     val padding = 12.dp
@@ -108,6 +108,7 @@ fun MyChatBubbleLeftPreview(
             userName = "John Doe",
             formattedTime = "10:30 AM",
             color = MaterialTheme.colorScheme.extended.accentGreen,
+            trianglePosition = TrianglePosition.LEFT,
         )
     }
 }
