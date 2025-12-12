@@ -9,12 +9,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.components.buttons.MyButton
+import com.example.designsystem.components.dialogs.AdaptiveDialog
+import com.example.designsystem.components.dialogs.DialogWrapper
 import com.example.designsystem.theme.MyTheme
+import com.example.domain.logging.MyLogger
+import com.example.presentation.util.DialogScopedViewmodelScreen
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,6 +47,7 @@ fun ChatListScreenScreen(
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
+        var isDialog by rememberSaveable { mutableStateOf(false) }
         Column {
             Text(text = "ChatListScreen", color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(20.dp))
@@ -48,18 +57,23 @@ fun ChatListScreenScreen(
                     onAction(ChatListScreenAction.Decrypt)
                 }
             )
+            Spacer(modifier = Modifier.height(20.dp))
             MyButton(
                 text = "Encrypt",
                 onClick = {
                     onAction(ChatListScreenAction.Encrypt)
                 }
             )
+            Spacer(modifier = Modifier.height(20.dp))
+
             MyButton(
                 text = "Decrypt 2",
                 onClick = {
                     onAction(ChatListScreenAction.Decrypt2)
                 }
             )
+            Spacer(modifier = Modifier.height(20.dp))
+            MyButton(text = "Show Dialog", onClick = { isDialog = true })
             Spacer(modifier = Modifier.height(20.dp))
             Text(text = state.userName, color = MaterialTheme.colorScheme.primary)
             Text(text = state.email, color = MaterialTheme.colorScheme.primary)
@@ -71,8 +85,30 @@ fun ChatListScreenScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = state.encryptedString, color = MaterialTheme.colorScheme.primary)
-
         }
+        DialogScopedViewmodelScreen(
+            isVisible = isDialog,
+            content = {
+                val vm = koinViewModel<TestViewmodel>()
+                AdaptiveDialog(
+                    onDismissRequest = { isDialog = false },
+                    content = {
+                        Text(text = "Dialog Content")
+                    }
+                )
+            }
+        )
+    }
+}
+
+class TestViewmodel(private val myLogger: MyLogger) : ViewModel() {
+    init {
+        myLogger.debug("TestViewmodel init")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        myLogger.debug("TestViewmodel onCleared")
     }
 }
 

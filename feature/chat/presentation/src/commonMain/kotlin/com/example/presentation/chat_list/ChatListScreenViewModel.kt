@@ -34,13 +34,6 @@ class ChatListScreenViewModel(
             initialValue = ChatListScreenState()
         )
 
-    init {
-        viewModelScope.launch {
-            delay(5000)
-            sessionStorage.set(null)
-        }
-    }
-
     fun onAction(action: ChatListScreenAction) {
         when (action) {
             ChatListScreenAction.Decrypt -> decrypt()
