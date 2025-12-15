@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.dialogs.AdaptiveDialog
-import com.example.designsystem.components.dialogs.DialogWrapper
 import com.example.designsystem.theme.MyTheme
 import com.example.domain.logging.MyLogger
 import com.example.presentation.util.DialogScopedViewmodelScreen

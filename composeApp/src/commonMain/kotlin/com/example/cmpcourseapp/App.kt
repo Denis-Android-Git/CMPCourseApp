@@ -12,6 +12,7 @@ import com.example.cmpcourseapp.navigation.NavigationRoot
 import com.example.designsystem.theme.MyTheme
 import com.example.presentation.chat_list.ChatListRoute
 import com.example.presentation.navigation.AuthGraphRoutes
+import com.example.presentation.navigation.ChatGraphRoutes
 import com.example.presentation.util.ObserveAsEvents
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,7 +53,7 @@ fun App(
             NavigationRoot(
                 navController,
                 startDestination = if (mainState.isLoggedIn) {
-                    ChatListRoute
+                    ChatGraphRoutes.Graph
                 } else {
                     AuthGraphRoutes.Graph
                 },

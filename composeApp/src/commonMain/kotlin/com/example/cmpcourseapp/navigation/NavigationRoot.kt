@@ -3,11 +3,10 @@ package com.example.cmpcourseapp.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.example.presentation.chat_list.ChatListRoute
-import com.example.presentation.chat_list.ChatListScreenRoot
 import com.example.presentation.navigation.AuthGraphRoutes
+import com.example.presentation.navigation.ChatGraphRoutes
 import com.example.presentation.navigation.authGraph
+import com.example.presentation.navigation.chatGraph
 
 @Composable
 fun NavigationRoot(
@@ -22,15 +21,18 @@ fun NavigationRoot(
         authGraph(
             navController = navController,
             onLoginSuccess = {
-                navController.navigate(ChatListRoute) {
+                navController.navigate(ChatGraphRoutes.Graph) {
                     popUpTo(AuthGraphRoutes.Graph) {
                         inclusive = true
                     }
                 }
             }
         )
-        composable<ChatListRoute> {
-            ChatListScreenRoot()
-        }
+        chatGraph(
+            navController = navController
+        )
+//        composable<ChatListRoute> {
+//            ChatListScreenRoot()
+//        }
     }
 } 
