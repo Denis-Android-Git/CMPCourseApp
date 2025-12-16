@@ -1,6 +1,6 @@
 package com.example.designsystem.components.avatar
 
-data class AvatarUi(
+data class ChatMemberUi(
     val id: String,
     val imageUrl: String? = null,
     val name: String,

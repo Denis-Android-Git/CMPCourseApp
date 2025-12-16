@@ -31,8 +31,5 @@ fun NavigationRoot(
         chatGraph(
             navController = navController
         )
-//        composable<ChatListRoute> {
-//            ChatListScreenRoot()
-//        }
     }
 } 
