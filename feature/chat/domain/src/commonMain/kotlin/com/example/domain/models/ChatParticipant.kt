@@ -1,6 +1,6 @@
 package com.example.domain.models
 
-data class ChatMember(
+data class ChatParticipant(
     val userId: String,
     val userName: String,
     val profilePictureUrl: String?

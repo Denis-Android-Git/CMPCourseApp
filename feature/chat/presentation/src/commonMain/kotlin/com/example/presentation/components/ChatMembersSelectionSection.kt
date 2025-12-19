@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.avatar.AvatarPhoto
-import com.example.designsystem.components.avatar.ChatMemberUi
+import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.theme.extended
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.currentDeviceConfiguration
@@ -25,8 +25,8 @@ import com.example.presentation.util.currentDeviceConfiguration
 @Composable
 fun ColumnScope.ChatMembersSelectionSection(
     modifier: Modifier = Modifier,
-    memberList: List<ChatMemberUi>,
-    searchResult: ChatMemberUi? = null
+    memberList: List<ChatParticipantUi>,
+    searchResult: ChatParticipantUi? = null
 ) {
     val configuration = currentDeviceConfiguration()
     val rootHeightModifier = when (configuration) {
@@ -52,14 +52,14 @@ fun ColumnScope.ChatMembersSelectionSection(
             searchResult?.let {
                 item {
                     ChatMemberItem(
-                        chatMemberUi = searchResult
+                        chatParticipantUi = searchResult
                     )
                 }
             }
             if (memberList.isNotEmpty() && searchResult == null) {
                 items(memberList, key = { it.id }) { member ->
                     ChatMemberItem(
-                        chatMemberUi = member
+                        chatParticipantUi = member
                     )
                 }
             }
@@ -70,7 +70,7 @@ fun ColumnScope.ChatMembersSelectionSection(
 @Composable
 fun ChatMemberItem(
     modifier: Modifier = Modifier,
-    chatMemberUi: ChatMemberUi
+    chatParticipantUi: ChatParticipantUi
 ) {
     Row(
         modifier = modifier
@@ -81,11 +81,11 @@ fun ChatMemberItem(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AvatarPhoto(
-            displayText = chatMemberUi.initials,
-            imageUrl = chatMemberUi.imageUrl,
+            displayText = chatParticipantUi.initials,
+            imageUrl = chatParticipantUi.imageUrl,
         )
         Text(
-            text = chatMemberUi.name, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.extended.textPrimary,
+            text = chatParticipantUi.name, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.extended.textPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

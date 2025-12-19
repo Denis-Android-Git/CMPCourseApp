@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
@@ -22,12 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.designsystem.theme.MyTheme
+import cmpcourseapp.feature.chat.presentation.generated.resources.Res
+import cmpcourseapp.feature.chat.presentation.generated.resources.add
+import com.example.designsystem.components.buttons.MyFloatingActionButton
 import com.example.designsystem.theme.extended
+import com.example.domain.models.Chat
 import com.example.presentation.create_chat.CreateChatRoot
 import com.example.presentation.util.DialogScopedViewmodelScreen
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -38,7 +45,14 @@ fun ChatListDetailAdaptiveLayoutRoot(
 
     ChatListDetailAdaptiveLayoutScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onDismiss = {
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnDismissCurrentChatClicked)
+        },
+        onChatCreated = {
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnDismissCurrentChatClicked)
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnChatClicked(it.id))
+        }
     )
 }
 
@@ -47,6 +61,8 @@ fun ChatListDetailAdaptiveLayoutRoot(
 fun ChatListDetailAdaptiveLayoutScreen(
     state: ChatListDetailAdaptiveLayoutState,
     onAction: (ChatListDetailAdaptiveLayoutAction) -> Unit,
+    onDismiss: () -> Unit,
+    onChatCreated: (Chat) -> Unit
 ) {
     val scaffoldDirective = createNoSpacingPaneScaffoldDirective()
     val navigator = rememberListDetailPaneScaffoldNavigator(
@@ -66,19 +82,37 @@ fun ChatListDetailAdaptiveLayoutScreen(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.extended.surfaceLower),
         listPane = {
             AnimatedPane {
-                LazyColumn {
-                    items(100) { id ->
-                        Text(
-                            text = id.toString(),
-                            modifier = Modifier.clickable {
-                                scope.launch {
-                                    onAction(ChatListDetailAdaptiveLayoutAction.OnCreateChatClicked)
-                                    onAction(ChatListDetailAdaptiveLayoutAction.OnChatClicked(id.toString()))
-                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
-                                }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    floatingActionButton = {
+                        MyFloatingActionButton(
+                            onClick = {
+                                onAction(ChatListDetailAdaptiveLayoutAction.OnCreateChatClicked)
                             }
-                                .padding(16.dp)
-                        )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add, contentDescription = stringResource(Res.string.add)
+                            )
+                        }
+                    }
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = it
+                    ) {
+                        items(100) { id ->
+                            Text(
+                                text = id.toString(),
+                                modifier = Modifier.clickable {
+                                    scope.launch {
+                                        onAction(ChatListDetailAdaptiveLayoutAction.OnCreateChatClicked)
+                                        onAction(ChatListDetailAdaptiveLayoutAction.OnChatClicked(id.toString()))
+                                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                                    }
+                                }
+                                    .padding(16.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -99,17 +133,14 @@ fun ChatListDetailAdaptiveLayoutScreen(
     DialogScopedViewmodelScreen(
         isVisible = state.dialogState is DialogState.CreateChat
     ) {
-        CreateChatRoot()
-    }
-}
-
-@Preview
-@Composable
-private fun ChatListDetailAdaptiveLayoutScreenPreview() {
-    MyTheme {
-        ChatListDetailAdaptiveLayoutScreen(
-            state = ChatListDetailAdaptiveLayoutState(),
-            onAction = {}
+        CreateChatRoot(
+            onDismiss = onDismiss,
+            onChatCreated = {
+                onChatCreated(it)
+                scope.launch {
+                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                }
+            }
         )
     }
 }

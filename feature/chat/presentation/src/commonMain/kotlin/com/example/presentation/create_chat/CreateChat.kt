@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,10 +27,12 @@ import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
 import com.example.designsystem.components.dialogs.AdaptiveDialog
 import com.example.designsystem.theme.MyTheme
+import com.example.domain.models.Chat
 import com.example.presentation.components.ChatMemberSearchSection
 import com.example.presentation.components.ManageChatButtonRow
 import com.example.presentation.components.ManageChatHeaderRow
 import com.example.presentation.util.DeviceConfiguration
+import com.example.presentation.util.ObserveAsEvents
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.resources.stringResource
@@ -38,18 +41,30 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CreateChatRoot(
-    viewModel: CreateChatViewModel = koinViewModel()
+    viewModel: CreateChatViewModel = koinViewModel(),
+    onDismiss: () -> Unit,
+    onChatCreated: (Chat) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    AdaptiveDialog(
-        onDismissRequest = {
-            viewModel.onAction(CreateChatAction.OnDismissClick)
+    ObserveAsEvents(viewModel.events) {
+        when (it) {
+            is CreateChatEvent.OnChatCreated -> onChatCreated(it.chat)
         }
+    }
+
+    AdaptiveDialog(
+        onDismissRequest = onDismiss
     ) {
         CreateChatScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = {
+                when (it) {
+                    CreateChatAction.OnDismissClick -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(it)
+            }
         )
     }
 }
@@ -63,7 +78,8 @@ fun CreateChatScreen(
     val imeHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val isKeyboardVisible = imeHeight > 0
     val configuration = currentDeviceConfiguration()
-    val shouldHideHeader = configuration == DeviceConfiguration.MOBILE_LANDSCAPE || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP) || isTextFieldFocused
+    val shouldHideHeader = configuration == DeviceConfiguration.MOBILE_LANDSCAPE || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
+            || isTextFieldFocused
     Column(
         modifier = Modifier
             .clearFocusOnTap()
@@ -71,6 +87,7 @@ fun CreateChatScreen(
             .wrapContentHeight()
             .imePadding()
             .background(color = MaterialTheme.colorScheme.surface)
+            .navigationBarsPadding()
     ) {
         AnimatedVisibility(
             visible = !shouldHideHeader
@@ -88,7 +105,7 @@ fun CreateChatScreen(
             queryState = state.queryTextState,
             onAddClick = { onAction(CreateChatAction.OnAddClick) },
             isSearchEnabled = state.canAddMember,
-            isLoading = state.isAddingMembers,
+            isLoading = state.isSearching,
             error = state.searchError,
             modifier = Modifier.fillMaxWidth(),
             onFocusChanged = {
@@ -104,6 +121,7 @@ fun CreateChatScreen(
         MyHorizontalDivider()
         ManageChatButtonRow(
             modifier = Modifier.fillMaxWidth(),
+            error = state.createChatError?.asString(),
             primaryButton = {
                 MyButton(
                     text = stringResource(Res.string.create_chat),

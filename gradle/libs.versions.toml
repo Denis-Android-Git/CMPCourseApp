@@ -2,7 +2,7 @@
 [versions]
 # Build tools
 agp = "8.13.2"
-composeBom = "2025.12.00"
+composeBom = "2025.12.01"
 kotlin = "2.2.21"
 ksp = "2.3.0"
 google-services = "4.4.4"
@@ -19,7 +19,7 @@ navigation-compose = "2.9.1"
 jetbrains-core-bundle = "1.0.1"
 
 # AndroidX
-androidx-activity = "1.12.1"
+androidx-activity = "1.12.2"
 androidx-core = "1.17.0"
 androidx-lifecycle = "2.9.0"
 androidx-test-ext = "1.2.1"

@@ -1,5 +1,6 @@
 package com.example.cmpcourseapp.di
 
+import com.example.data.di.chatDataModule
 import com.example.data.di.coreDataModule
 import com.example.presentation.di.authPresentationModule
 import com.example.presentation.di.chatPresentationModule
@@ -15,7 +16,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             authPresentationModule,
             chatPresentationModule,
             mainStateModule,
-            corePresentationModule
+            corePresentationModule,
+            chatDataModule
         )
     }
 }

@@ -34,7 +34,7 @@ fun ChatMemberSearchSection(
                 horizontal = 20.dp,
                 vertical = 16.dp
             ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         MyTextField(

@@ -12,7 +12,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun StackedAvatars(
     modifier: Modifier = Modifier,
-    avatars: List<ChatMemberUi>,
+    avatars: List<ChatParticipantUi>,
     size: AvatarSize = AvatarSize.SMALL,
     maxVisible: Int = 2,
     overlapPercentage: Float = 0.4f
@@ -50,26 +50,26 @@ fun StackedAvatarsPreview() {
         StackedAvatars(
             modifier = Modifier,
             avatars = listOf(
-                ChatMemberUi(
+                ChatParticipantUi(
                     imageUrl = "https://example.com/avatar1.png",
                     id = 1.toString(),
                     name = "Ivan",
                     initials = "ID"
                 ),
-                ChatMemberUi(
+                ChatParticipantUi(
                     imageUrl = "https://example.com/avatar2.png",
                     id = 2.toString(),
                     name = "Den",
                     initials = "DD"
                 ),
-                ChatMemberUi(
+                ChatParticipantUi(
                     imageUrl = "https://example.com/avatar3.png",
                     id = 3.toString(),
                     name = "Ilya",
                     initials = "IK"
 
                 ),
-                ChatMemberUi(
+                ChatParticipantUi(
                     imageUrl = "https://example.com/avatar4.png",
                     id = 4.toString(),
                     name = "Kostya",
