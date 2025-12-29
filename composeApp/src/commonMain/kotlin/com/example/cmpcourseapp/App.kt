@@ -10,7 +10,6 @@ import com.example.cmpcourseapp.mainstate.MainViewModel
 import com.example.cmpcourseapp.navigation.DeepLinkListener
 import com.example.cmpcourseapp.navigation.NavigationRoot
 import com.example.designsystem.theme.MyTheme
-import com.example.presentation.chat_list.ChatListRoute
 import com.example.presentation.navigation.AuthGraphRoutes
 import com.example.presentation.navigation.ChatGraphRoutes
 import com.example.presentation.util.ObserveAsEvents

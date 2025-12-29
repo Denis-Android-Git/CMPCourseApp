@@ -39,7 +39,7 @@ import cmpcourseapp.core.designsystem.generated.resources.Res as DesignSystemRes
 @Composable
 fun ChatListHeader(
     modifier: Modifier = Modifier,
-    localParticipant: ChatParticipantUi,
+    localParticipant: ChatParticipantUi?,
     isUserMenuOpen: Boolean, onUserAvatarClick: () -> Unit, onUserMenuDismiss: () -> Unit, onProfileSettingsClick: () -> Unit, onLogoutClick: () -> Unit
 ) {
     ChatHeader(
@@ -55,27 +55,38 @@ fun ChatListHeader(
                 text = "Wow chat", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.extended.textPrimary
             )
             Spacer(modifier = Modifier.weight(1f))
-            ProfileAvatarSection(
-                modifier = Modifier,
-                localParticipant = localParticipant,
-                isUserMenuOpen = isUserMenuOpen,
-                onClick = onUserAvatarClick,
-                onDismiss = onUserMenuDismiss,
-                onProfileSettingsClick = onProfileSettingsClick,
-                onLogoutClick = onLogoutClick
-            )
+            localParticipant?.let {
+                ProfileAvatarSection(
+                    modifier = Modifier,
+                    localParticipant = localParticipant,
+                    isUserMenuOpen = isUserMenuOpen,
+                    onClick = onUserAvatarClick,
+                    onDismiss = onUserMenuDismiss,
+                    onProfileSettingsClick = onProfileSettingsClick,
+                    onLogoutClick = onLogoutClick
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ProfileAvatarSection(
-    modifier: Modifier = Modifier, localParticipant: ChatParticipantUi, isUserMenuOpen: Boolean, onClick: () -> Unit, onDismiss: () -> Unit, onProfileSettingsClick: () -> Unit, onLogoutClick: () -> Unit
+    modifier: Modifier = Modifier,
+    localParticipant: ChatParticipantUi?,
+    isUserMenuOpen: Boolean, onClick: () -> Unit,
+    onDismiss: () -> Unit,
+    onProfileSettingsClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Box(modifier = modifier) {
-        AvatarPhoto(
-            displayText = localParticipant.initials, imageUrl = localParticipant.imageUrl, onClick = onClick
-        )
+        localParticipant?.let {
+            AvatarPhoto(
+                displayText = localParticipant.initials,
+                imageUrl = localParticipant.imageUrl,
+                onClick = onClick
+            )
+        }
         DropdownMenu(
             expanded = isUserMenuOpen,
             shape = RoundedCornerShape(16.dp),

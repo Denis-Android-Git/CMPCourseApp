@@ -41,8 +41,7 @@ import kotlin.time.Clock
 fun ChatListItem(
     modifier: Modifier = Modifier,
     chatUi: ChatUi,
-    isSelected: Boolean,
-    onClick: () -> Unit
+    isSelected: Boolean
 ) {
     val isGroupChat = chatUi.remoteParticipants.size > 1
     Row(
@@ -177,7 +176,7 @@ fun ChatListItemPreview() {
                 ),
                 lastMessageSenderName = " Jane Doe"
             ),
-            isSelected = true,
-            onClick = {})
+            isSelected = true
+        )
     }
 }

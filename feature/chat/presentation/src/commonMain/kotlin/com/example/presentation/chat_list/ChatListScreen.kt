@@ -1,40 +1,73 @@
 package com.example.presentation.chat_list
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.designsystem.components.buttons.MyButton
-import com.example.designsystem.components.dialogs.AdaptiveDialog
+import cmpcourseapp.feature.chat.presentation.generated.resources.Res
+import cmpcourseapp.feature.chat.presentation.generated.resources.add
+import cmpcourseapp.feature.chat.presentation.generated.resources.cancel
+import cmpcourseapp.feature.chat.presentation.generated.resources.do_you_want_to_logout
+import cmpcourseapp.feature.chat.presentation.generated.resources.do_you_want_to_logout_desc
+import cmpcourseapp.feature.chat.presentation.generated.resources.logout
+import com.example.designsystem.components.brand.MyHorizontalDivider
+import com.example.designsystem.components.buttons.MyFloatingActionButton
+import com.example.designsystem.components.dialogs.DeleteDialog
 import com.example.designsystem.theme.MyTheme
-import com.example.domain.logging.MyLogger
-import com.example.presentation.util.DialogScopedViewmodelScreen
-import kotlinx.serialization.Serializable
+import com.example.designsystem.theme.extended
+import com.example.presentation.chat_list.components.ChatListHeader
+import com.example.presentation.chat_list.components.ChatListItem
+import com.example.presentation.chat_list.components.EmptyChatSection
+import com.example.presentation.model.ChatUi
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListScreenRoot(
-    viewModel: ChatListScreenViewModel = koinViewModel()
+    viewModel: ChatListScreenViewModel = koinViewModel(),
+    onChatClicked: (ChatUi) -> Unit,
+    onConfirmLogoutClicked: () -> Unit,
+    onCreateChatClicked: () -> Unit,
+    onProfileSettingsClicked: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     ChatListScreenScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = {
+            when (it) {
+                is ChatListScreenAction.OnChatClicked -> onChatClicked(it.chat)
+                ChatListScreenAction.OnConfirmLogoutClicked -> onConfirmLogoutClicked()
+                ChatListScreenAction.OnCreateChatClicked -> onCreateChatClicked()
+                ChatListScreenAction.OnProfileSettingsClicked -> onProfileSettingsClicked()
+                else -> Unit
+            }
+            viewModel.onAction(it)
+        },
+        snackbarHostState = snackbarHostState
     )
 }
 
@@ -42,77 +75,96 @@ fun ChatListScreenRoot(
 fun ChatListScreenScreen(
     state: ChatListScreenState,
     onAction: (ChatListScreenAction) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-    ) {
-        var isDialog by rememberSaveable { mutableStateOf(false) }
-        Column {
-            Text(text = "ChatListScreen", color = MaterialTheme.colorScheme.primary)
-            Spacer(modifier = Modifier.height(20.dp))
-            MyButton(
-                text = "Decrypt",
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.extended.surfaceLower,
+        contentWindowInsets = WindowInsets.safeDrawing,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            MyFloatingActionButton(
                 onClick = {
-                    onAction(ChatListScreenAction.Decrypt)
+                    onAction(ChatListScreenAction.OnCreateChatClicked)
                 }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            MyButton(
-                text = "Encrypt",
-                onClick = {
-                    onAction(ChatListScreenAction.Encrypt)
-                }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            MyButton(
-                text = "Decrypt 2",
-                onClick = {
-                    onAction(ChatListScreenAction.Decrypt2)
-                }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            MyButton(text = "Show Dialog", onClick = { isDialog = true })
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(text = state.userName, color = MaterialTheme.colorScheme.primary)
-            Text(text = state.email, color = MaterialTheme.colorScheme.primary)
-            Text(text = state.hasVarifiedEmail.toString(), color = MaterialTheme.colorScheme.primary)
-            Text(text = state.accessToken, color = MaterialTheme.colorScheme.primary)
-            Text(text = state.refreshToken, color = MaterialTheme.colorScheme.primary)
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(text = state.encryptedString, color = MaterialTheme.colorScheme.primary)
-        }
-        DialogScopedViewmodelScreen(
-            isVisible = isDialog,
-            content = {
-                val vm = koinViewModel<TestViewmodel>()
-                AdaptiveDialog(
-                    onDismissRequest = { isDialog = false },
-                    content = {
-                        Text(text = "Dialog Content")
-                    }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add, contentDescription = stringResource(Res.string.add)
                 )
             }
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(it),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ChatListHeader(
+                localParticipant = state.localParticipant,
+                isUserMenuOpen = state.isUserMenuOpen,
+                onUserAvatarClick = { onAction(ChatListScreenAction.OnUsrAvatarClicked) },
+                onUserMenuDismiss = { onAction(ChatListScreenAction.OnDismissUserMenu) },
+                onProfileSettingsClick = { onAction(ChatListScreenAction.OnProfileSettingsClicked) },
+                onLogoutClick = {
+                    onAction(ChatListScreenAction.OnLogoutClicked)
+                }
+            )
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                state.chats.isEmpty() -> {
+                    EmptyChatSection(
+                        modifier = Modifier.weight(1f)
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                    )
+                }
+
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        items(
+                            state.chats,
+                            key = { chatUi ->
+                                chatUi.id
+                            }
+                        ) { chatUi ->
+                            ChatListItem(
+                                chatUi = chatUi,
+                                isSelected = chatUi.id == state.selectedChatId,
+                                modifier = Modifier.fillMaxWidth()
+                                    .clickable {
+                                        onAction(ChatListScreenAction.OnChatClicked(chatUi))
+                                    }
+                            )
+                            MyHorizontalDivider()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (state.showLogoutConfirmationDialog) {
+        DeleteDialog(
+            title = stringResource(Res.string.do_you_want_to_logout),
+            description = stringResource(Res.string.do_you_want_to_logout_desc),
+            onDismissRequest = { onAction(ChatListScreenAction.OnDismissLogoutDialog) },
+            onConfirm = {
+                onAction(ChatListScreenAction.OnLogoutClicked)
+            },
+            onCancel = { onAction(ChatListScreenAction.OnDismissLogoutDialog) },
+            confirmButtonText = stringResource(Res.string.logout),
+            cancelButtonText = stringResource(Res.string.cancel)
         )
     }
 }
-
-class TestViewmodel(private val myLogger: MyLogger) : ViewModel() {
-    init {
-        myLogger.debug("TestViewmodel init")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        myLogger.debug("TestViewmodel onCleared")
-    }
-}
-
-@Serializable
-data object ChatListRoute
 
 @Preview
 @Composable
@@ -120,7 +172,8 @@ private fun Preview() {
     MyTheme {
         ChatListScreenScreen(
             state = ChatListScreenState(),
-            onAction = {}
+            onAction = {},
+            snackbarHostState = remember { SnackbarHostState() }
         )
     }
 }
