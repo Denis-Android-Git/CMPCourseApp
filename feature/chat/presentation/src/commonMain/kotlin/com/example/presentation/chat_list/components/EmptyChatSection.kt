@@ -17,6 +17,8 @@ import cmpcourseapp.feature.chat.presentation.generated.resources.empty_chat
 import cmpcourseapp.feature.chat.presentation.generated.resources.no_messages
 import cmpcourseapp.feature.chat.presentation.generated.resources.no_messages_subtitle
 import com.example.designsystem.theme.extended
+import com.example.presentation.util.DeviceConfiguration
+import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -24,6 +26,8 @@ import org.jetbrains.compose.resources.stringResource
 fun EmptyChatSection(
     modifier: Modifier = Modifier
 ) {
+    val configuration = currentDeviceConfiguration()
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
@@ -32,7 +36,13 @@ fun EmptyChatSection(
         Image(
             painter = painterResource(Res.drawable.empty_chat),
             contentDescription = stringResource(Res.string.no_messages),
-            modifier = Modifier.size(200.dp)
+            modifier = Modifier.size(
+                if (configuration == DeviceConfiguration.MOBILE_LANDSCAPE) {
+                    120.dp
+                } else {
+                    200.dp
+                }
+            )
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(

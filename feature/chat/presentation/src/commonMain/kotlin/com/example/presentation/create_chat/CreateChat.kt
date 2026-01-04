@@ -43,7 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateChatRoot(
     viewModel: CreateChatViewModel = koinViewModel(),
     onDismiss: () -> Unit,
-    onChatCreated: (Chat) -> Unit
+    onChatCreated: (Chat) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
