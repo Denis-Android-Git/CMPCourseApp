@@ -23,6 +23,7 @@ import com.example.designsystem.theme.extended
 import com.example.domain.models.DeliveryStatus
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageStatusUi(
@@ -56,4 +57,9 @@ fun MessageStatusUi(
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = text, color = color, style = MaterialTheme.typography.labelSmall)
     }
+}
+@Preview
+@Composable
+fun MessageStatusUiPreview() {
+    MessageStatusUi(status = DeliveryStatus.SENDING)
 }
