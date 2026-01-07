@@ -1,15 +1,13 @@
 package com.example.presentation.chat_detail.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cmpcourseapp.core.designsystem.generated.resources.reload_icon
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
@@ -29,6 +26,8 @@ import com.example.designsystem.components.avatar.AvatarPhoto
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.components.chat.MyChatBubble
 import com.example.designsystem.components.chat.TrianglePosition
+import com.example.designsystem.components.dropdown.DropDownItem
+import com.example.designsystem.components.dropdown.MyDropDownMenu
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.domain.models.DeliveryStatus
@@ -116,28 +115,18 @@ private fun LocalUserMessageUi(
                     onMessageLongClick()
                 },
             )
-            DropdownMenu(
-                expanded = messageUi.isMenuOpen,
+            MyDropDownMenu(
+                isOpen = messageUi.isMenuOpen,
                 onDismissRequest = onDismissMessageMenu,
-                containerColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.extended.surfaceOutline
+                items = listOf(
+                    DropDownItem(
+                        title = stringResource(Res.string.delete_for_everyone),
+                        icon = Icons.Default.Delete,
+                        contentColor = MaterialTheme.colorScheme.extended.destructiveHover,
+                        onClick = onDeleteClick
+                    )
                 )
-            ) {
-                DropdownMenuItem(
-                    onClick = {
-                        onDismissMessageMenu()
-                        onDeleteClick()
-                    },
-                    text = {
-                        Text(stringResource(Res.string.delete_for_everyone), color = MaterialTheme.colorScheme.extended.destructiveHover, fontWeight = FontWeight.Medium)
-                    },
-                    leadingIcon = { /*TODO*/ },
-                    trailingIcon = { /*TODO*/ }
-                )
-            }
+            )
         }
         if (messageUi.deliveryStatus == DeliveryStatus.FAILED) {
             IconButton(

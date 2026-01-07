@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.SpanStyle
@@ -24,16 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import cmpcourseapp.feature.chat.presentation.generated.resources.Res
-import cmpcourseapp.feature.chat.presentation.generated.resources.group_chat
-import cmpcourseapp.feature.chat.presentation.generated.resources.you
 import com.example.designsystem.components.avatar.ChatParticipantUi
-import com.example.designsystem.components.avatar.StackedAvatars
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.domain.models.ChatMessage
+import com.example.presentation.components.ChatItemHeaderRow
 import com.example.presentation.model.ChatUi
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Clock
 
@@ -62,48 +56,11 @@ fun ChatListItem(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StackedAvatars(
-                    avatars = chatUi.remoteParticipants
-                )
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = if (!isGroupChat) {
-                            chatUi.remoteParticipants.first().name
-                        } else {
-                            stringResource(Res.string.group_chat)
-                        },
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.extended.textPrimary,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    if (isGroupChat) {
-                        val you = stringResource(Res.string.you)
-                        val formattedNames = remember(chatUi.remoteParticipants) {
-                            "$you, " + chatUi.remoteParticipants.joinToString { it.name }
-                        }
-                        Text(
-                            text = formattedNames,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.extended.textPlaceholder,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }
+            ChatItemHeaderRow(
+                isGroupChat = isGroupChat,
+                chatUi = chatUi,
+                modifier = Modifier.fillMaxWidth()
+            )
             chatUi.lastMessage?.let {
                 val message = buildAnnotatedString {
                     withStyle(
