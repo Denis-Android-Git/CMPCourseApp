@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -68,7 +67,7 @@ fun MyMultilineTextField(
             },
             cursorBrush = SolidColor(MaterialTheme.colorScheme.extended.textPrimary),
             decorator = { innerBox ->
-                if (placeholder != null && state.text.isNotEmpty()) {
+                if (placeholder != null && state.text.isEmpty()) {
                     Text(
                         text = placeholder,
                         color = MaterialTheme.colorScheme.extended.textPlaceholder,
