@@ -41,10 +41,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MessageListItemUi(
     modifier: Modifier = Modifier,
     messageUi: MessageUi,
-    onMessageLongClick: () -> Unit = {},
+    onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit = {},
     onDismissMessageMenu: () -> Unit = {},
-    onDeleteClick: () -> Unit = {},
-    onRetryClick: () -> Unit = {}
+    onDeleteClick: (MessageUi.LocalUserMessage) -> Unit = {},
+    onRetryClick: (MessageUi.LocalUserMessage) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -54,10 +54,10 @@ fun MessageListItemUi(
             is MessageUi.LocalUserMessage -> LocalUserMessageUi(
                 messageUi = messageUi,
                 modifier = modifier,
-                onMessageLongClick = onMessageLongClick,
+                onMessageLongClick = { onMessageLongClick(messageUi) },
                 onDismissMessageMenu = onDismissMessageMenu,
-                onDeleteClick = onDeleteClick,
-                onRetryClick = onRetryClick
+                onDeleteClick = { onDeleteClick(messageUi) },
+                onRetryClick = { onRetryClick(messageUi) }
             )
 
             is MessageUi.OtherUserMessage -> OtherUserMessageUi(messageUi = messageUi)
