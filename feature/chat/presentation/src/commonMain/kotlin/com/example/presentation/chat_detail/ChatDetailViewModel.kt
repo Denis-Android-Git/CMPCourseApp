@@ -30,5 +30,4 @@ class ChatDetailViewModel : ViewModel() {
             else -> {}
         }
     }
-
 }

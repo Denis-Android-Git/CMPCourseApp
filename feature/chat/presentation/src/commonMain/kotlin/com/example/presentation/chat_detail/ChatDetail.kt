@@ -16,18 +16,24 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
@@ -42,6 +48,7 @@ import com.example.presentation.model.MessageUi
 import com.example.presentation.util.UiText
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
@@ -59,16 +66,43 @@ fun ChatDetailRoot(
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
-    BackHandler(
-        enabled = !isDetailPresent
-    ) {
-        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
-        onBack()
+
+// Use an empty state as a stub to satisfy the required argument
+    val navState = rememberNavigationEventState(NavigationEventInfo.None)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    NavigationBackHandler(
+        state = navState,
+        isBackEnabled = !isDetailPresent,
+        onBackCancelled = {
+            scope.launch {
+                snackbarHostState.showSnackbar("Back gesture cancelled")
+            }
+        },
+        onBackCompleted = {
+            viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+            onBack()
+        }
+    )
+    LaunchedEffect(navState.transitionState) {
+        //val transitionState = navState.transitionState
+//        if (transitionState is NavigationEventTransitionState.InProgress) {
+//            //val progress = transitionState.latestEvent.progress
+//            // Animate the back gesture progress
+//        }
     }
+
+//    BackHandler(
+//        enabled = !isDetailPresent
+//    ) {
+//        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+//        onBack()
+//    }
     ChatDetailScreen(
         state = state,
         onAction = viewModel::onAction,
-        isDetailPresent = isDetailPresent
+        isDetailPresent = isDetailPresent,
+        snackbarHostState = snackbarHostState
     )
 }
 
@@ -76,6 +110,7 @@ fun ChatDetailRoot(
 fun ChatDetailScreen(
     state: ChatDetailState,
     isDetailPresent: Boolean,
+    snackbarHostState: SnackbarHostState,
     onAction: (ChatDetailAction) -> Unit,
 ) {
     val configuration = currentDeviceConfiguration()
@@ -83,6 +118,9 @@ fun ChatDetailScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         containerColor = if (!configuration.isWideScreen) {
             MaterialTheme.colorScheme.surface
         } else {
@@ -243,7 +281,8 @@ private fun Preview() {
                 }
             ),
             onAction = {},
-            isDetailPresent = false
+            isDetailPresent = false,
+            snackbarHostState = SnackbarHostState()
         )
     }
 }

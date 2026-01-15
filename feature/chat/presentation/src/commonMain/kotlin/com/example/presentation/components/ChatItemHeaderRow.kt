@@ -11,14 +11,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
 import cmpcourseapp.feature.chat.presentation.generated.resources.group_chat
 import cmpcourseapp.feature.chat.presentation.generated.resources.you
+import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.components.avatar.StackedAvatars
+import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
+import com.example.domain.models.ChatMessage
 import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 
 @Composable
 fun ChatItemHeaderRow(
@@ -67,5 +72,36 @@ fun ChatItemHeaderRow(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ChatItemHeaderRowPreview() {
+    MyTheme {
+        ChatItemHeaderRow(
+            chatUi = ChatUi(
+                id = "vehicula",
+                localParticipant = ChatParticipantUi(
+                    id = "delicata",
+                    imageUrl = "https://www.google.com/#q=quaerendum",
+                    name = "Gretchen Espinoza",
+                    initials = "mattis"
+                ),
+                remoteParticipants = listOf(
+                    ChatParticipantUi(
+                        id = "et",
+                        imageUrl = "https://search.yahoo.com/search?p=quisque",
+                        name = "Ingrid Todd", initials = "NN"
+                    )
+                ),
+                lastMessage = ChatMessage(
+                    content = "necessitatibus",
+                    id = "erat", chatId = "possim",
+                    createdAt = Clock.System.now(), senderId = "tractatos"
+                ),
+                lastMessageSenderName = "Ingrid Todd"
+            ), isGroupChat = false
+        )
     }
 }

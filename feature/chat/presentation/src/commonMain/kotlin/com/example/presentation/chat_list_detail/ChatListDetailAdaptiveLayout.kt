@@ -72,6 +72,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
     )
     val scope = rememberCoroutineScope()
     val detailPane = navigator.scaffoldValue[ListDetailPaneScaffoldRole.Detail]
+
     LaunchedEffect(detailPane, state.selectedChatId) {
         if (detailPane == PaneAdaptedValue.Hidden && state.selectedChatId != null) {
             onChatClicked(null)

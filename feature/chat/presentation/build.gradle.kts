@@ -24,6 +24,9 @@ kotlin {
                 implementation(libs.jetbrains.compose.backhandler)
                 implementation(libs.components.resources)
 
+                implementation(libs.jetbrains.navigation3.ui)
+                implementation(libs.jetbrains.lifecycle.viewmodel.nav3)
+                implementation(libs.androidx.navigationevent)
 
             }
         }

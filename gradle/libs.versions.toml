@@ -24,7 +24,7 @@ jetbrains-core-bundle = "1.0.1"
 # AndroidX
 androidx-activity = "1.12.2"
 androidx-core = "1.17.0"
-androidx-lifecycle = "2.9.0"
+androidx-lifecycle = "2.10.0-alpha07"
 androidx-test-ext = "1.2.1"
 androidx-runner = "1.6.2"
 androidx-test-core = "1.7.0"
@@ -39,6 +39,7 @@ kotlinx-datetime = "0.7.1"
 # Third party
 koin = "4.1.1"
 ktor = "3.3.3"
+navigationevent = "1.0.1"
 room = "2.8.4"
 runtime = "1.10.0"
 sqlite = "2.6.2"
@@ -56,6 +57,8 @@ junit = "1.3.0"
 material-icons = "1.7.3"
 kermit = "2.0.8"
 
+cmpNavigation3 = "1.0.0-alpha06"
+
 
 projectApplicationId = "com.example.cmpcourseapp"
 projectVersionName = "1.0"
@@ -71,6 +74,12 @@ ui = "1.10.0"
 uiToolingPreview = "1.10.0"
 
 [libraries]
+
+androidx-navigationevent = { module = "androidx.navigationevent:navigationevent", version.ref = "navigationevent" }
+jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "cmpNavigation3" }
+jetbrains-lifecycle-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+
+
 # Kotlin
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "compose-lifecycle" }
