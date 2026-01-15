@@ -6,7 +6,7 @@ plugins {
 kotlin {
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
 
@@ -24,12 +24,12 @@ kotlin {
             implementation(projects.feature.chat.presentation)
             implementation(projects.feature.chat.database)
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.runtime.v1100)
+            implementation(libs.foundation.v1100)
+            implementation(libs.material3.v190)
+            implementation(libs.ui.v1100)
+            implementation(libs.components.resources)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.compose.navigation)

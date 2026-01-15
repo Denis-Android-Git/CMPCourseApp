@@ -25,7 +25,7 @@ import com.example.designsystem.components.textfields.MyPasswordTextField
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

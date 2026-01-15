@@ -28,7 +28,7 @@ import com.example.designsystem.theme.extended
 import com.example.domain.models.ChatMessage
 import com.example.presentation.components.ChatItemHeaderRow
 import com.example.presentation.model.ChatUi
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import kotlin.time.Clock
 
 @Composable

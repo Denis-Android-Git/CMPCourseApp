@@ -11,10 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MyIconButton(

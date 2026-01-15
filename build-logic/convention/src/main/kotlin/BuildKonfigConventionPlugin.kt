@@ -12,7 +12,7 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.codingfeline.buildkonfig")
             }
-            extensions.configure<BuildKonfigExtension>() {
+            extensions.configure<BuildKonfigExtension> {
                 packageName = target.pathToPackageName()
                 defaultConfigs {
                     val apiKey = gradleLocalProperties(rootDir, rootProject.providers)

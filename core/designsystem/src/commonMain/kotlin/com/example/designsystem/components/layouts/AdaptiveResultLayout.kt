@@ -20,12 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.brand.Logo
 import com.example.designsystem.theme.MyTheme
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.currentDeviceConfiguration
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AdaptiveResultLayout(

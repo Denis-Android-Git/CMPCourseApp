@@ -20,7 +20,7 @@ import cmpcourseapp.core.designsystem.generated.resources.Res
 import cmpcourseapp.core.designsystem.generated.resources.logo
 import com.example.designsystem.theme.MyTheme
 import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MySurface(

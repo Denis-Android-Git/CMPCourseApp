@@ -14,15 +14,15 @@ kotlin {
                 implementation(projects.core.designsystem)
                 implementation(projects.core.data) //!!!not needed
 
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
+                implementation(libs.components.resources)
+                implementation(libs.ui.tooling.preview)
                 implementation(libs.bundles.koin.common)
 
                 implementation(libs.material3.adaptive)
                 implementation(libs.material3.adaptive.layout)
                 implementation(libs.material3.adaptive.navigation)
                 implementation(libs.jetbrains.compose.backhandler)
-                implementation(compose.components.resources)
+                implementation(libs.components.resources)
 
 
             }

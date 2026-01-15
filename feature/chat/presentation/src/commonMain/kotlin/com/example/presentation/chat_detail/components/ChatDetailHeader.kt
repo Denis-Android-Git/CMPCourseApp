@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -34,13 +35,13 @@ import com.example.presentation.components.ChatItemHeaderRow
 import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import kotlin.time.Clock
 
 @Composable
 fun ChatDetailHeader(
     modifier: Modifier = Modifier,
-    chatUi: ChatUi,
+    chatUi: ChatUi?,
     isDropDownOpen: Boolean,
     isDetailPresent: Boolean,
     onChatOptionsClick: () -> Unit,
@@ -49,7 +50,6 @@ fun ChatDetailHeader(
     onLeaveChatClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val isGroupChat = chatUi.remoteParticipants.size > 1
     Row(
         modifier = modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.surface),
         verticalAlignment = Alignment.CenterVertically,
@@ -68,13 +68,19 @@ fun ChatDetailHeader(
                 }
             )
         }
-        ChatItemHeaderRow(
-            chatUi = chatUi,
-            isGroupChat = isGroupChat,
-            modifier = Modifier.weight(1f).clickable {
-                onManageChatClick()
-            }
-        )
+
+        if (chatUi != null) {
+            val isGroupChat = chatUi.remoteParticipants.size > 1
+            ChatItemHeaderRow(
+                chatUi = chatUi,
+                isGroupChat = isGroupChat,
+                modifier = Modifier.weight(1f).clickable {
+                    onManageChatClick()
+                }
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
         Box {
             MyIconButton(
                 onClick = onChatOptionsClick,

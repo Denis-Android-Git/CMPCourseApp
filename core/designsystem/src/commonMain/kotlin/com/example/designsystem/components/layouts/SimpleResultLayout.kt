@@ -19,7 +19,7 @@ import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SimpleResultLayout(

@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cmpcourseapp.core.designsystem.generated.resources.reload_icon
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
@@ -35,7 +36,8 @@ import com.example.presentation.model.MessageUi
 import com.example.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.presentation.util.getChatColor
 
 @Composable
 fun MessageListItemUi(
@@ -60,7 +62,10 @@ fun MessageListItemUi(
                 onRetryClick = { onRetryClick(messageUi) }
             )
 
-            is MessageUi.OtherUserMessage -> OtherUserMessageUi(messageUi = messageUi)
+            is MessageUi.OtherUserMessage -> OtherUserMessageUi(
+                messageUi = messageUi,
+                color = getChatColor(messageUi.sender.id)
+            )
         }
     }
 
@@ -145,7 +150,8 @@ private fun LocalUserMessageUi(
 @Composable
 private fun OtherUserMessageUi(
     messageUi: MessageUi.OtherUserMessage,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -159,6 +165,7 @@ private fun OtherUserMessageUi(
         MyChatBubble(
             messageContent = messageUi.content,
             userName = messageUi.sender.name,
+            color = color,
             trianglePosition = TrianglePosition.LEFT,
             formattedTime = messageUi.formattedSentTime.asString()
         )
@@ -191,11 +198,11 @@ fun PreviewOtherUserMessage() {
         Box(modifier = Modifier.fillMaxSize()) {
             MessageListItemUi(
                 messageUi = MessageUi.OtherUserMessage(
-                    id = "2",
+                    id = "22",
                     content = "Привет 👋",
                     formattedSentTime = UiText.DynamicString("12:31"),
                     sender = ChatParticipantUi(
-                        id = "user_2",
+                        id = "3",
                         name = "Alex",
                         imageUrl = "",
                         initials = "AM"

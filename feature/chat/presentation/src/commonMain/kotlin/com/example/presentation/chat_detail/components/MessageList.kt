@@ -24,7 +24,7 @@ import com.example.presentation.components.EmptyListSection
 import com.example.presentation.model.MessageUi
 import com.example.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageList(

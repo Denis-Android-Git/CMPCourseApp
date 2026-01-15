@@ -10,7 +10,7 @@ internal fun Project.configureKotlinMultiplatform() {
         namespace = this@configureKotlinMultiplatform.pathToPackageName()
     }
     configureAndroidTarget()
-    extensions.configure<KotlinMultiplatformExtension>() {
+    extensions.configure<KotlinMultiplatformExtension> {
         listOf(
             iosX64(),
             iosArm64(),

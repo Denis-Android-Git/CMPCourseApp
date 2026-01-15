@@ -7,8 +7,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
+                implementation(libs.components.resources)
+                implementation(libs.ui.tooling.preview)
 
                 implementation(projects.core.presentation)
                 //Coil

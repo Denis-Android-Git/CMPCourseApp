@@ -2,7 +2,9 @@
 [versions]
 # Build tools
 agp = "8.13.2"
+componentsResources = "1.10.0"
 composeBom = "2025.12.01"
+foundation = "1.10.0"
 kotlin = "2.2.21"
 ksp = "2.3.0"
 google-services = "4.4.4"
@@ -12,9 +14,10 @@ androidTools = "31.13.2"
 
 # Compose
 compose-hot-reload = "1.0.0"
-compose-multiplatform = "1.9.3"
+compose-multiplatform = "1.10.0"
 # Maintain compose multiplatform version aligned with navigation, cache error could happen
 compose-lifecycle = "2.9.6"
+material3 = "1.9.0"
 navigation-compose = "2.9.1"
 jetbrains-core-bundle = "1.0.1"
 
@@ -37,6 +40,7 @@ kotlinx-datetime = "0.7.1"
 koin = "4.1.1"
 ktor = "3.3.3"
 room = "2.8.4"
+runtime = "1.10.0"
 sqlite = "2.6.2"
 datastore = "1.2.0"
 firebase-bom = "34.7.0"
@@ -63,6 +67,8 @@ projectVersionCode = "1"
 # Desktop Version
 desktopPackageName = "CmpCourseApp"
 desktopPackageVersion = "1.0.0"
+ui = "1.10.0"
+uiToolingPreview = "1.10.0"
 
 [libraries]
 # Kotlin
@@ -70,10 +76,14 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "compose-lifecycle" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
+components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "componentsResources" }
+foundation-v1100 = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "foundation" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 
 # Logging
+material3-v190 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+runtime-v1100 = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
 touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 # AndroidX Core
@@ -171,6 +181,8 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 #BuildKonfig
 buildkonfig-gradlePlugin = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
 buildkonfig-compiler = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-compiler", version.ref = "buildkonfig" }
+ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
+ui-v1100 = { module = "org.jetbrains.compose.ui:ui", version.ref = "ui" }
 
 [plugins]
 convention-android-application = { id = "com.example.convention.android.application", version = "no" }
