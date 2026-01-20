@@ -71,6 +71,7 @@ fun ChatDetailRoot(
     val navState = rememberNavigationEventState(NavigationEventInfo.None)
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
     NavigationBackHandler(
         state = navState,
         isBackEnabled = !isDetailPresent,

@@ -3,14 +3,14 @@
 # Build tools
 agp = "8.13.2"
 componentsResources = "1.10.0"
-composeBom = "2025.12.01"
+composeBom = "2026.01.00"
 foundation = "1.10.0"
 kotlin = "2.2.21"
-ksp = "2.3.0"
+ksp = "2.3.2"
 google-services = "4.4.4"
 
 androidDesugarJdkLibs = "2.1.5"
-androidTools = "31.13.2"
+androidTools = "32.0.0"
 
 # Compose
 compose-hot-reload = "1.0.0"
@@ -44,7 +44,7 @@ room = "2.8.4"
 runtime = "1.10.0"
 sqlite = "2.6.2"
 datastore = "1.2.0"
-firebase-bom = "34.7.0"
+firebase-bom = "34.8.0"
 adaptive = "1.2.0"
 compose-jetbrains = "1.8.2"
 jetbrains-savedstate = "1.4.0"
