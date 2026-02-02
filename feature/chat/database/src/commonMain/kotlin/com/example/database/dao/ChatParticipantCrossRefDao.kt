@@ -8,7 +8,7 @@ import com.example.database.entities.ChatParticipantCrossRef
 import com.example.database.entities.ChatParticipantEntity
 
 @Dao
-interface ChatParticipantsCrossRefDao {
+interface ChatParticipantCrossRefDao {
     @Upsert
     suspend fun upsertCrossRefs(crossRefs: List<ChatParticipantCrossRef>)
 
@@ -16,9 +16,8 @@ interface ChatParticipantsCrossRefDao {
     suspend fun getActiveParticipantIdsByChat(chatId: String): List<String>
 
 
-    @Query("SELECT userId FROM chatparticipantcrossref")
+    @Query("SELECT userId FROM chatparticipantcrossref WHERE chatId = :chatId")
     suspend fun getAllParticipantIdsByChat(chatId: String): List<String>
-
 
     @Query(
         """

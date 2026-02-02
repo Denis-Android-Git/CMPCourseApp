@@ -16,6 +16,7 @@ interface ChatDao {
 
     @Upsert
     suspend fun upsertChat(chat: ChatEntity)
+
     @Upsert
     suspend fun upsertChats(chats: List<ChatEntity>)
 
@@ -23,9 +24,11 @@ interface ChatDao {
     suspend fun deleteChatById(chatId: String)
 
     @Query("SELECT * FROM chatentity ORDER BY lastActivityAt DESC")
+    @Transaction
     fun getChatsWithParticipants(): Flow<List<ChatWithParticipants>>
 
     @Query("SELECT * FROM chatentity WHERE chatId = :id")
+    @Transaction
     suspend fun getChatById(id: String): ChatWithParticipants?
 
     @Query("DELETE FROM chatentity")
@@ -56,6 +59,7 @@ interface ChatDao {
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
 
     @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
+    @Transaction
     fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
 
     @Transaction
@@ -63,7 +67,7 @@ interface ChatDao {
         chat: ChatEntity,
         participants: List<ChatParticipantEntity>,
         chatParticipantDao: ChatParticipantDao,
-        chatParticipantsCrossRefDao: ChatParticipantsCrossRefDao
+        chatParticipantCrossRefDao: ChatParticipantCrossRefDao
     ) {
         upsertChat(chat)
         chatParticipantDao.upsertAll(participants)
@@ -74,8 +78,8 @@ interface ChatDao {
                 isActive = true
             )
         }
-        chatParticipantsCrossRefDao.upsertCrossRefs(crossRefs)
-        chatParticipantsCrossRefDao.syncChatParticipants(chat.chatId, participants)
+        chatParticipantCrossRefDao.upsertCrossRefs(crossRefs)
+        chatParticipantCrossRefDao.syncChatParticipants(chat.chatId, participants)
     }
 
 
@@ -84,7 +88,7 @@ interface ChatDao {
         chats: List<ChatWithParticipants>,
         crossRefs: List<ChatParticipantCrossRef>,
         chatParticipantDao: ChatParticipantDao,
-        chatParticipantsCrossRefDao: ChatParticipantsCrossRefDao
+        chatParticipantCrossRefDao: ChatParticipantCrossRefDao
     ) {
         upsertChats(chats.map { it.chat })
         val allParticipants = chats.flatMap { it.participants }
@@ -98,9 +102,9 @@ interface ChatDao {
                 )
             }
         }
-        chatParticipantsCrossRefDao.upsertCrossRefs(allCrossRefs)
+        chatParticipantCrossRefDao.upsertCrossRefs(allCrossRefs)
         chats.forEach {
-            chatParticipantsCrossRefDao.syncChatParticipants(
+            chatParticipantCrossRefDao.syncChatParticipants(
                 chatId = it.chat.chatId,
                 participants = it.participants
             )
