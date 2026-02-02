@@ -2,6 +2,7 @@ package com.example.database.entities
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.example.database.view.LastMessageView
 
 data class ChatWithParticipants(
     @Embedded
@@ -13,12 +14,19 @@ data class ChatWithParticipants(
             value = ChatParticipantCrossRef::class
         )
     )
-    val participants: List<ChatParticipantEntity>
+    val participants: List<ChatParticipantEntity>,
+    @Relation(
+        parentColumn = "chatId",
+        entityColumn = "chatId",
+        entity = LastMessageView::class
+    )
+    val lastMessageView: LastMessageView?
 )
 
 data class ChatInfoEntity(
     @Embedded
     val chat: ChatEntity,
+
     @Relation(
         parentColumn = "chatId",
         entityColumn = "userId",
@@ -27,6 +35,7 @@ data class ChatInfoEntity(
         )
     )
     val participants: List<ChatParticipantEntity>,
+
     @Relation(
         parentColumn = "chatId",
         entityColumn = "chatId",
