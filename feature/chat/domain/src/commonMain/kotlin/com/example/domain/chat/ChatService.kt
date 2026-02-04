@@ -8,4 +8,6 @@ interface ChatService {
     suspend fun createChat(
         idList: List<String>
     ): CustomResult<Chat, DataError.Remote>
+
+    suspend fun getChats(): CustomResult<List<Chat>, DataError.Remote>
 }

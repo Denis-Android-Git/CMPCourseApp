@@ -29,6 +29,7 @@ import com.example.domain.models.ChatMessage
 import com.example.presentation.components.ChatItemHeaderRow
 import com.example.presentation.model.ChatUi
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.domain.models.DeliveryStatus
 import kotlin.time.Clock
 
 @Composable
@@ -109,7 +110,8 @@ fun ChatListItemPreview() {
                     id = "1",
                     chatId = "1",
                     createdAt = Clock.System.now(),
-                    senderId = "1"
+                    senderId = "1",
+                    deliveryStatus = DeliveryStatus.SENT
                 ),
                 localParticipant = ChatParticipantUi(
                     id = "1",

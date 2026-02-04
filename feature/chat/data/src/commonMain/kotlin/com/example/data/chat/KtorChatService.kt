@@ -3,6 +3,7 @@ package com.example.data.chat
 import com.example.data.dto.ChatDto
 import com.example.data.dto.request.CreateChatRequest
 import com.example.data.mappers.toDomain
+import com.example.data.network.get
 import com.example.data.network.post
 import com.example.domain.chat.ChatService
 import com.example.domain.models.Chat
@@ -21,5 +22,15 @@ class KtorChatService(
                 otherUserIds = idList
             )
         ).map { it.toDomain() }
+    }
+
+    override suspend fun getChats(): CustomResult<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map {
+                it.toDomain()
+            }
+        }
     }
 }

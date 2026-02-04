@@ -21,6 +21,7 @@ import com.example.designsystem.components.avatar.StackedAvatars
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.domain.models.ChatMessage
+import com.example.domain.models.DeliveryStatus
 import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
@@ -98,7 +99,8 @@ fun ChatItemHeaderRowPreview() {
                 lastMessage = ChatMessage(
                     content = "necessitatibus",
                     id = "erat", chatId = "possim",
-                    createdAt = Clock.System.now(), senderId = "tractatos"
+                    createdAt = Clock.System.now(), senderId = "tractatos",
+                    deliveryStatus = DeliveryStatus.SENT
                 ),
                 lastMessageSenderName = "Ingrid Todd"
             ), isGroupChat = false

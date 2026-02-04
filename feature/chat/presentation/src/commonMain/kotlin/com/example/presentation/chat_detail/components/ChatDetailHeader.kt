@@ -36,6 +36,7 @@ import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.domain.models.DeliveryStatus
 import kotlin.time.Clock
 
 @Composable
@@ -149,6 +150,7 @@ fun PreviewChatDetailHeader() {
                         senderId = "1",
                         chatId = "1",
                         createdAt = Clock.System.now(),
+                        deliveryStatus = DeliveryStatus.SENT
                     ),
                     lastMessageSenderName = "John Doe"
                 ),

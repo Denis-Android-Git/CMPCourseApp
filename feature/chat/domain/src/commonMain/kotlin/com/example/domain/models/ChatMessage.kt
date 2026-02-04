@@ -7,5 +7,6 @@ data class ChatMessage(
     val id: String,
     val chatId: String,
     val createdAt: Instant,
-    val senderId: String
+    val senderId: String,
+    val deliveryStatus: DeliveryStatus
 )

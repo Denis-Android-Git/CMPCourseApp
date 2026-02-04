@@ -1,6 +1,7 @@
 package com.example.presentation.mappers
 
 import com.example.designsystem.components.avatar.ChatParticipantUi
+import com.example.domain.auth.User
 import com.example.domain.models.Chat
 import com.example.domain.models.ChatParticipant
 import com.example.presentation.model.ChatUi
@@ -10,6 +11,12 @@ fun ChatParticipant.toUi() = ChatParticipantUi(
     imageUrl = profilePictureUrl,
     name = userName,
     initials = initials
+)
+
+fun User.toUi() = ChatParticipantUi(
+    id = id,
+    name = userName,
+    initials = userName.take(2).uppercase()
 )
 
 fun Chat.toUi(localParticipantId: String): ChatUi {

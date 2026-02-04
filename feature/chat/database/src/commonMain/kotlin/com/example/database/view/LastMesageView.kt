@@ -13,11 +13,13 @@ import androidx.room.DatabaseView
             GROUP BY chatId
         ) m2
         ON m1.chatId = m2.chatId AND m1.timestamp = m2.max_timestamp
-    """)
+    """
+)
 data class LastMessageView(
     val messageId: String,
     val chatId: String,
     val senderId: String,
     val content: String,
-    val timeStamp: Long
+    val timeStamp: Long,
+    val deliveryStatus: String
 )
