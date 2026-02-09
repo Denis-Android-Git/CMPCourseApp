@@ -32,18 +32,16 @@ class ChatListScreenViewModel(
             chats = chats.map { it.toUi(authInfo.user.id) },
             localParticipant = authInfo.user.toUi()
         )
-    }
-        .onStart {
-            if (!hasLoadedInitialData) {
-                fetchChats()
-                hasLoadedInitialData = true
-            }
+    }.onStart {
+        if (!hasLoadedInitialData) {
+            fetchChats()
+            hasLoadedInitialData = true
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = ChatListScreenState()
-        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = ChatListScreenState()
+    )
 
     fun onAction(action: ChatListScreenAction) {
         when (action) {

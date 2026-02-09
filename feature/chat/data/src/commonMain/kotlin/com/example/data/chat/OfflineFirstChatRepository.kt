@@ -8,10 +8,14 @@ import com.example.database.my_database.MyDataBase
 import com.example.domain.chat.ChatRepository
 import com.example.domain.chat.ChatService
 import com.example.domain.models.Chat
+import com.example.domain.models.ChatInfo
 import com.example.domain.util.CustomResult
 import com.example.domain.util.DataError
+import com.example.domain.util.EmptyResult
+import com.example.domain.util.asEmptyResult
 import com.example.domain.util.onSuccess
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
 class OfflineFirstChatRepository(
@@ -25,6 +29,12 @@ class OfflineFirstChatRepository(
                     it.toDomain()
                 }
             }
+    }
+
+    override fun getChatInfoById(id: String): Flow<ChatInfo> {
+        return myDataBase.chatDao.getChatInfoById(id)
+            .filterNotNull()
+            .map { it.toDomain() }
     }
 
     override suspend fun fetchChats(): CustomResult<List<Chat>, DataError.Remote> {
@@ -46,6 +56,18 @@ class OfflineFirstChatRepository(
                     chatMessageDao = myDataBase.chatMessageDao
                 )
             }
+    }
+
+    override suspend fun fetchChatById(id: String): EmptyResult<DataError.Remote> {
+        return chatService.getChatById(id)
+            .onSuccess { chat ->
+                myDataBase.chatDao.upsertChatWithParticipantsAndCrossRef(
+                    chat.toEntity(),
+                    participants = chat.memberList.map { it.toEntity() },
+                    chatParticipantDao = myDataBase.chatParticipantDao,
+                    chatParticipantCrossRefDao = myDataBase.chatParticipantCrossRefDao
+                )
+            }.asEmptyResult()
     }
 
 }

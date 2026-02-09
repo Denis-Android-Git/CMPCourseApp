@@ -10,4 +10,5 @@ interface ChatService {
     ): CustomResult<Chat, DataError.Remote>
 
     suspend fun getChats(): CustomResult<List<Chat>, DataError.Remote>
+    suspend fun getChatById(id: String): CustomResult<Chat, DataError.Remote>
 }
