@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
 import cmpcourseapp.feature.chat.presentation.generated.resources.error_participant_not_found
 import com.example.domain.chat.ChatParticipantService
-import com.example.domain.chat.ChatService
+import com.example.domain.chat.ChatRepository
 import com.example.domain.util.DataError
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
     private val chatParticipantService: ChatParticipantService,
-    private val chatService: ChatService
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -130,7 +130,7 @@ class CreateChatViewModel(
                     canAddMember = false
                 )
             }
-            chatService.createChat(idList)
+            chatRepository.createChat(idList)
                 .onSuccess { chat ->
                     _state.update {
                         it.copy(
