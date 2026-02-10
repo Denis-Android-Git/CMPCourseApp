@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatListScreenViewModel(
@@ -45,7 +46,13 @@ class ChatListScreenViewModel(
 
     fun onAction(action: ChatListScreenAction) {
         when (action) {
-            is ChatListScreenAction.OnChatClicked -> {}
+            is ChatListScreenAction.OnChatClicked -> {
+                _state.update {
+                    it.copy(
+                        selectedChatId = action.chat.id
+                    )
+                }
+            }
             ChatListScreenAction.OnConfirmLogoutClicked -> {}
             ChatListScreenAction.OnDismissLogoutDialog -> {}
             ChatListScreenAction.OnDismissUserMenu -> {}

@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -184,6 +185,7 @@ fun ChatDetailScreen(
                                 onAction(ChatDetailAction.OnSendMessageClick)
                             },
                             modifier = Modifier.fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
                         )
                     }
                 }
@@ -193,15 +195,19 @@ fun ChatDetailScreen(
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && state.chat != null
                 ) {
-                    MessageBox(
-                        messageState = state.messageTextFieldState,
-                        isTextInputEnabled = state.canSendMessage,
-                        connectionState = state.connectionState,
-                        onSendMessage = {
-                            onAction(ChatDetailAction.OnSendMessageClick)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    DynamicCornerColumn(
+                        isRoundedCorner = configuration.isWideScreen
+                    ) {
+                        MessageBox(
+                            messageState = state.messageTextFieldState,
+                            isTextInputEnabled = state.canSendMessage,
+                            connectionState = state.connectionState,
+                            onSendMessage = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                        )
+                    }
                 }
             }
         }
@@ -217,8 +223,9 @@ private fun DynamicCornerColumn(
     Column(
         modifier = modifier
             .shadow(
-                if (isRoundedCorner) 4.dp else 0.dp,
-                if (isRoundedCorner) RoundedCornerShape(16.dp) else RectangleShape
+                if (isRoundedCorner) 8.dp else 0.dp,
+                if (isRoundedCorner) RoundedCornerShape(24.dp) else RectangleShape,
+                spotColor = Color.Black.copy(alpha = 0.2f)
             )
             .background(
                 color = MaterialTheme.colorScheme.surface,
@@ -248,6 +255,11 @@ private fun Preview() {
                             id = "volutpat",
                             imageUrl = "https://www.google.com/#q=facilis",
                             name = "Antonia Cruz", initials = "AC"
+                        ),
+                        ChatParticipantUi(
+                            id = "nibh",
+                            imageUrl = "https://www.google.com/#q=tempus",
+                            name = "Tara Mccoy", initials = "TM"
                         )
                     ),
                     lastMessage = null,

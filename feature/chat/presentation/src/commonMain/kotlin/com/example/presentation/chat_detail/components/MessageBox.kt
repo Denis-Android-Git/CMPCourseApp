@@ -38,7 +38,7 @@ fun MessageBox(
 ) {
     val isConnected = connectionState == ConnectionState.CONNECTED
     MyMultilineTextField(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier,
         state = messageState,
         placeholder = stringResource(Res.string.send_a_message),
         enabled = isTextInputEnabled,
