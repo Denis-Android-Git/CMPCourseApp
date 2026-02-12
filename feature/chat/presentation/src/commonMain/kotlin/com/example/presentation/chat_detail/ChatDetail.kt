@@ -35,9 +35,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.example.data.logging.KermitLogger
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
+import com.example.domain.logging.MyLogger
 import com.example.domain.models.ConnectionState
 import com.example.domain.models.DeliveryStatus
 import com.example.presentation.chat_detail.components.ChatDetailHeader
@@ -46,6 +48,7 @@ import com.example.presentation.chat_detail.components.MessageList
 import com.example.presentation.components.ChatHeader
 import com.example.presentation.model.ChatUi
 import com.example.presentation.model.MessageUi
+import com.example.presentation.util.ObserveAsEvents
 import com.example.presentation.util.UiText
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
@@ -61,16 +64,27 @@ fun ChatDetailRoot(
     chatId: String?,
     isDetailPresent: Boolean,
     onBack: () -> Unit,
-    viewModel: ChatDetailViewModel = koinViewModel()
+    viewModel: ChatDetailViewModel = koinViewModel(),
+    myLogger: MyLogger = KermitLogger
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    ObserveAsEvents(viewModel.events) {
+        myLogger.debug("ObserveAsEvents $it")
+        when (it) {
+            ChatDetailEvent.OnChatLeft -> onBack()
+            is ChatDetailEvent.OnError -> {
+                snackbarHostState.showSnackbar(it.error.asStringAsync())
+            }
+        }
+    }
+
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
 
 // Use an empty state as a stub to satisfy the required argument
     val navState = rememberNavigationEventState(NavigationEventInfo.None)
-    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     NavigationBackHandler(

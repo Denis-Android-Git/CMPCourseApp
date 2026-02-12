@@ -16,7 +16,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.logging.KermitLogger
 import com.example.designsystem.theme.extended
+import com.example.domain.logging.MyLogger
 import com.example.domain.models.Chat
 import com.example.presentation.chat_detail.ChatDetailRoot
 import com.example.presentation.chat_list.ChatListScreenRoot
@@ -64,7 +66,8 @@ fun ChatListDetailAdaptiveLayoutScreen(
     onChatClicked: (ChatUi?) -> Unit,
     onConfirmLogoutClicked: () -> Unit,
     onCreateChatClicked: () -> Unit,
-    onProfileSettingsClicked: () -> Unit
+    onProfileSettingsClicked: () -> Unit,
+    myLogger: MyLogger = KermitLogger
 ) {
     val scaffoldDirective = createNoSpacingPaneScaffoldDirective()
     val navigator = rememberListDetailPaneScaffoldNavigator(
@@ -114,6 +117,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
                         isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
                         onBack = {
                             scope.launch {
+                                myLogger.debug("Navigating back")
                                 if (navigator.canNavigateBack()) {
                                     navigator.navigateBack()
                                 }
