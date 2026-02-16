@@ -4,6 +4,7 @@ import com.example.presentation.chat_detail.ChatDetailViewModel
 import com.example.presentation.chat_list.ChatListScreenViewModel
 import com.example.presentation.chat_list_detail.ChatListDetailAdaptiveLayoutViewModel
 import com.example.presentation.create_chat.CreateChatViewModel
+import com.example.presentation.manage_chat.ManageChatViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -12,5 +13,6 @@ val chatPresentationModule = module {
     viewModelOf(::ChatListDetailAdaptiveLayoutViewModel)
     viewModelOf(::CreateChatViewModel)
     viewModelOf(::ChatDetailViewModel)
+    viewModelOf(::ManageChatViewModel)
 
 }

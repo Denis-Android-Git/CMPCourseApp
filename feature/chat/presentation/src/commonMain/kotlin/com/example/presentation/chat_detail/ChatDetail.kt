@@ -64,6 +64,7 @@ fun ChatDetailRoot(
     chatId: String?,
     isDetailPresent: Boolean,
     onBack: () -> Unit,
+    onChatMembersClick: () -> Unit,
     viewModel: ChatDetailViewModel = koinViewModel(),
     myLogger: MyLogger = KermitLogger
 ) {
@@ -116,7 +117,13 @@ fun ChatDetailRoot(
 //    }
     ChatDetailScreen(
         state = state,
-        onAction = viewModel::onAction,
+        onAction = {
+            when (it) {
+                ChatDetailAction.OnChatMembersClick -> onChatMembersClick()
+                else -> Unit
+            }
+            viewModel.onAction(it)
+        },
         isDetailPresent = isDetailPresent,
         snackbarHostState = snackbarHostState
     )

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.components.avatar.AvatarPhoto
 import com.example.designsystem.components.avatar.ChatParticipantUi
+import com.example.designsystem.components.brand.MyHorizontalDivider
 import com.example.designsystem.theme.extended
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.currentDeviceConfiguration
@@ -25,6 +26,7 @@ import com.example.presentation.util.currentDeviceConfiguration
 @Composable
 fun ColumnScope.ChatMembersSelectionSection(
     modifier: Modifier = Modifier,
+    existingMembers: List<ChatParticipantUi>,
     memberList: List<ChatParticipantUi>,
     searchResult: ChatParticipantUi? = null
 ) {
@@ -49,6 +51,24 @@ fun ColumnScope.ChatMembersSelectionSection(
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
+
+            items(
+                existingMembers,
+                key = {
+                    "existingMembers_${it.id}"
+                }
+            ) { chatParticipantUi ->
+                ChatMemberItem(
+                    chatParticipantUi = chatParticipantUi,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            if (existingMembers.isNotEmpty()) {
+                item {
+                    MyHorizontalDivider()
+                }
+            }
+
             searchResult?.let {
                 item {
                     ChatMemberItem(
@@ -85,7 +105,9 @@ fun ChatMemberItem(
             imageUrl = chatParticipantUi.imageUrl,
         )
         Text(
-            text = chatParticipantUi.name, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.extended.textPrimary,
+            text = chatParticipantUi.name,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.extended.textPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

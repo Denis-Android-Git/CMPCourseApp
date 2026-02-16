@@ -11,6 +11,8 @@ import com.example.domain.chat.ChatRepository
 import com.example.domain.util.DataError
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
+import com.example.presentation.components.manage_chat.ManageChatAction
+import com.example.presentation.components.manage_chat.ManageChatState
 import com.example.presentation.mappers.toUi
 import com.example.presentation.util.UiText
 import com.example.presentation.util.toUiText
@@ -35,7 +37,7 @@ class CreateChatViewModel(
 
     private var hasLoadedInitialData = false
 
-    private val _state = MutableStateFlow(CreateChatState())
+    private val _state = MutableStateFlow(ManageChatState())
 
     private val eventChannel = Channel<CreateChatEvent>()
     val events = eventChannel.receiveAsFlow()
@@ -105,13 +107,13 @@ class CreateChatViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = CreateChatState()
+            initialValue = ManageChatState()
         )
 
-    fun onAction(action: CreateChatAction) {
+    fun onAction(action: ManageChatAction) {
         when (action) {
-            CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> createChat()
+            ManageChatAction.OnAddClick -> addParticipant()
+            ManageChatAction.OnPrimaryActionClick -> createChat()
             else -> Unit
         }
     }

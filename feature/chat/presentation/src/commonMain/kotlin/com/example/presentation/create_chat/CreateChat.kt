@@ -37,6 +37,9 @@ import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.presentation.components.manage_chat.ManageChatAction
+import com.example.presentation.components.manage_chat.ManageChatScreen
+import com.example.presentation.components.manage_chat.ManageChatState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -56,98 +59,17 @@ fun CreateChatRoot(
     AdaptiveDialog(
         onDismissRequest = onDismiss
     ) {
-        CreateChatScreen(
+        ManageChatScreen(
             state = state,
             onAction = {
                 when (it) {
-                    CreateChatAction.OnDismissClick -> onDismiss()
+                    ManageChatAction.OnDismissClick -> onDismiss()
                     else -> Unit
                 }
                 viewModel.onAction(it)
-            }
-        )
-    }
-}
-
-@Composable
-fun CreateChatScreen(
-    state: CreateChatState,
-    onAction: (CreateChatAction) -> Unit,
-) {
-    var isTextFieldFocused by remember { mutableStateOf(false) }
-    val imeHeight = WindowInsets.ime.getBottom(LocalDensity.current)
-    val isKeyboardVisible = imeHeight > 0
-    val configuration = currentDeviceConfiguration()
-    val shouldHideHeader = configuration == DeviceConfiguration.MOBILE_LANDSCAPE || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
-            || isTextFieldFocused
-    Column(
-        modifier = Modifier
-            .clearFocusOnTap()
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .imePadding()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .navigationBarsPadding()
-    ) {
-        AnimatedVisibility(
-            visible = !shouldHideHeader
-        ) {
-            Column {
-                ManageChatHeaderRow(
-                    title = stringResource(Res.string.create_chat),
-                    onCloseClick = { onAction(CreateChatAction.OnDismissClick) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                MyHorizontalDivider()
-            }
-        }
-        ChatMemberSearchSection(
-            queryState = state.queryTextState,
-            onAddClick = { onAction(CreateChatAction.OnAddClick) },
-            isSearchEnabled = state.canAddMember,
-            isLoading = state.isSearching,
-            error = state.searchError,
-            modifier = Modifier.fillMaxWidth(),
-            onFocusChanged = {
-                isTextFieldFocused = it
-            }
-        )
-        MyHorizontalDivider()
-        ChatMembersSelectionSection(
-            memberList = state.selectedMembers,
-            modifier = Modifier.fillMaxWidth(),
-            searchResult = state.currentSearchResult
-        )
-        MyHorizontalDivider()
-        ManageChatButtonRow(
-            modifier = Modifier.fillMaxWidth(),
-            error = state.createChatError?.asString(),
-            primaryButton = {
-                MyButton(
-                    text = stringResource(Res.string.create_chat),
-                    onClick = { onAction(CreateChatAction.OnCreateChatClick) },
-                    enabled = state.selectedMembers.isNotEmpty(),
-                    loading = state.isCreatingChat
-                )
             },
-            secondaryButton = {
-                MyButton(
-                    text = stringResource(Res.string.cancel),
-                    onClick = { onAction(CreateChatAction.OnDismissClick) },
-                    style = MyButtonStyle.SECONDARY
-                )
-            }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    MyTheme {
-        CreateChatScreen(
-            state = CreateChatState(),
-            onAction = {}
+            primaryButtonText = stringResource(Res.string.create_chat),
+            headerText = stringResource(Res.string.create_chat)
         )
     }
 }

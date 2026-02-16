@@ -23,6 +23,7 @@ import com.example.domain.models.Chat
 import com.example.presentation.chat_detail.ChatDetailRoot
 import com.example.presentation.chat_list.ChatListScreenRoot
 import com.example.presentation.create_chat.CreateChatRoot
+import com.example.presentation.manage_chat.ManageChatRoot
 import com.example.presentation.model.ChatUi
 import com.example.presentation.util.DialogScopedViewmodelScreen
 import kotlinx.coroutines.launch
@@ -53,6 +54,9 @@ fun ChatListDetailAdaptiveLayoutRoot(
         },
         onProfileSettingsClicked = {
             viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnProfileSettingsClicked)
+        },
+        onChatMembersClick = {
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnManageChatClicked)
         }
     )
 }
@@ -67,6 +71,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
     onConfirmLogoutClicked: () -> Unit,
     onCreateChatClicked: () -> Unit,
     onProfileSettingsClicked: () -> Unit,
+    onChatMembersClick: () -> Unit,
     myLogger: MyLogger = KermitLogger
 ) {
     val scaffoldDirective = createNoSpacingPaneScaffoldDirective()
@@ -122,7 +127,8 @@ fun ChatListDetailAdaptiveLayoutScreen(
                                     navigator.navigateBack()
                                 }
                             }
-                        }
+                        },
+                        onChatMembersClick = onChatMembersClick
                     )
                 }
             }
@@ -138,6 +144,16 @@ fun ChatListDetailAdaptiveLayoutScreen(
                 scope.launch {
                     navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                 }
+            }
+        )
+    }
+    DialogScopedViewmodelScreen(
+        isVisible = state.dialogState is DialogState.ManageChat
+    ) {
+        ManageChatRoot(
+            onDismiss = onDismiss,
+            onMembersAdded = {
+                onDismiss()
             }
         )
     }
