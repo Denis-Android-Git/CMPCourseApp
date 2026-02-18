@@ -1,6 +1,7 @@
 package com.example.presentation.manage_chat
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
@@ -15,12 +16,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ManageChatRoot(
+    chatId: String?,
     onDismiss: () -> Unit,
     onMembersAdded: () -> Unit,
     manageChatViewModel: ManageChatViewModel = koinViewModel()
 ) {
     val state by manageChatViewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(chatId) {
+        manageChatViewModel.onAction(ManageChatAction.ChatPeople.OnSelectChat(chatId))
+    }
 
     ObserveAsEvents(manageChatViewModel.events) {
         when (it) {

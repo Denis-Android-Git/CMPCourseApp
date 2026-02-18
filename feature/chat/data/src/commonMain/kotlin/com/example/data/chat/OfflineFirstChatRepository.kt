@@ -11,10 +11,12 @@ import com.example.domain.chat.ChatRepository
 import com.example.domain.chat.ChatService
 import com.example.domain.models.Chat
 import com.example.domain.models.ChatInfo
+import com.example.domain.models.ChatParticipant
 import com.example.domain.util.CustomResult
 import com.example.domain.util.DataError
 import com.example.domain.util.EmptyResult
 import com.example.domain.util.asEmptyResult
+import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -44,6 +46,15 @@ class OfflineFirstChatRepository(
                         }
                     }.awaitAll()
                         .map { it.toDomain() }
+                }
+            }
+    }
+
+    override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> {
+        return myDataBase.chatDao.getActiveParticipantsByChatId(chatId)
+            .map { participants ->
+                participants.map {
+                    it.toDomain()
                 }
             }
     }
@@ -112,6 +123,27 @@ class OfflineFirstChatRepository(
             .onSuccess {
                 myDataBase.chatDao.deleteChatById(chatId)
             }.asEmptyResult()
+    }
+
+    override suspend fun addPeopleToChat(
+        chatId: String,
+        userIds: List<String>
+    ): CustomResult<Chat, DataError.Remote> {
+        return chatService.addPeopleToChat(
+            chatId = chatId,
+            idsList = userIds
+        )
+            .onSuccess {
+                myDataBase.chatDao.upsertChatWithParticipantsAndCrossRef(
+                    chat = it.toEntity(),
+                    participants = it.memberList.map { it.toEntity() },
+                    chatParticipantDao = myDataBase.chatParticipantDao,
+                    chatParticipantCrossRefDao = myDataBase.chatParticipantCrossRefDao
+                )
+            }
+            .onFailure {
+
+            }
     }
 
     private suspend fun List<ChatParticipantEntity>.onlyActive(chatId: String): List<ChatParticipantEntity> {

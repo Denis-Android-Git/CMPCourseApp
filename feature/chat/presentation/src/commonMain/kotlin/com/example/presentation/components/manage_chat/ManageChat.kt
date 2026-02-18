@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
 import cmpcourseapp.feature.chat.presentation.generated.resources.cancel
-import cmpcourseapp.feature.chat.presentation.generated.resources.create_chat
 import com.example.designsystem.components.brand.MyHorizontalDivider
 import com.example.designsystem.components.buttons.MyButton
 import com.example.designsystem.components.buttons.MyButtonStyle
@@ -90,13 +89,13 @@ fun ManageChatScreen(
         MyHorizontalDivider()
         ManageChatButtonRow(
             modifier = Modifier.fillMaxWidth(),
-            error = state.createChatError?.asString(),
+            error = state.submitError?.asString(),
             primaryButton = {
                 MyButton(
                     text = primaryButtonText,
                     onClick = { onAction(ManageChatAction.OnPrimaryActionClick) },
                     enabled = state.selectedMembers.isNotEmpty(),
-                    loading = state.isCreatingChat
+                    loading = state.isSubmitting
                 )
             },
             secondaryButton = {

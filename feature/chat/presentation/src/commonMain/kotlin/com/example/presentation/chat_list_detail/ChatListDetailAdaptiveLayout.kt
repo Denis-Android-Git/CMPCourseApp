@@ -151,6 +151,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
         isVisible = state.dialogState is DialogState.ManageChat
     ) {
         ManageChatRoot(
+            chatId = state.selectedChatId,
             onDismiss = onDismiss,
             onMembersAdded = {
                 onDismiss()

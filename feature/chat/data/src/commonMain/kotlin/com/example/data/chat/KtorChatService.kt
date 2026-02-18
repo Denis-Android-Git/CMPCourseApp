@@ -2,6 +2,7 @@ package com.example.data.chat
 
 import com.example.data.dto.ChatDto
 import com.example.data.dto.request.CreateChatRequest
+import com.example.data.dto.request.PeopleRequest
 import com.example.data.mappers.toDomain
 import com.example.data.network.delete
 import com.example.data.network.get
@@ -49,5 +50,19 @@ class KtorChatService(
         return httpClient.delete<Unit>(
             route = "/chat/$id/leave"
         ).asEmptyResult()
+    }
+
+    override suspend fun addPeopleToChat(
+        chatId: String,
+        idsList: List<String>
+    ): CustomResult<Chat, DataError.Remote> {
+        return httpClient.post<PeopleRequest, ChatDto>(
+            route = "/chat/$chatId/add",
+            body = PeopleRequest(
+                userIds = idsList
+            )
+        ).map {
+            it.toDomain()
+        }
     }
 }
