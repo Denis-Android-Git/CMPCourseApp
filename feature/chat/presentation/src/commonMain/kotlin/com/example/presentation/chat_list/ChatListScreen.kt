@@ -40,7 +40,7 @@ import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.presentation.chat_list.components.ChatListHeader
 import com.example.presentation.chat_list.components.ChatListItem
-import com.example.presentation.components.EmptyListSection
+import com.example.presentation.components.EmptySection
 import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -119,7 +119,7 @@ fun ChatListScreenScreen(
                 }
 
                 state.chats.isEmpty() -> {
-                    EmptyListSection(
+                    EmptySection(
                         modifier = Modifier.weight(1f)
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),

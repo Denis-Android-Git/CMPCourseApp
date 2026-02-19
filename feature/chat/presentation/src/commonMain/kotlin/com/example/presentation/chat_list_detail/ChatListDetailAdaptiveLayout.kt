@@ -116,21 +116,19 @@ fun ChatListDetailAdaptiveLayoutScreen(
         detailPane = {
             AnimatedPane {
                 val listPane = navigator.scaffoldValue[ListDetailPaneScaffoldRole.List]
-                state.selectedChatId?.let {
-                    ChatDetailRoot(
-                        chatId = it,
-                        isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
-                        onBack = {
-                            scope.launch {
-                                myLogger.debug("Navigating back")
-                                if (navigator.canNavigateBack()) {
-                                    navigator.navigateBack()
-                                }
+                ChatDetailRoot(
+                    chatId = state.selectedChatId,
+                    isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
+                    onBack = {
+                        scope.launch {
+                            myLogger.debug("Navigating back")
+                            if (navigator.canNavigateBack()) {
+                                navigator.navigateBack()
                             }
-                        },
-                        onChatMembersClick = onChatMembersClick
-                    )
-                }
+                        }
+                    },
+                    onChatMembersClick = onChatMembersClick
+                )
             }
         }
     )

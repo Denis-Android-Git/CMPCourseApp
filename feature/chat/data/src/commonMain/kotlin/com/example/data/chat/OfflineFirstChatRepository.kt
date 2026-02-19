@@ -1,5 +1,7 @@
 package com.example.data.chat
 
+import com.example.data.lifeCycle.AppLifeCycleObserver
+import com.example.data.logging.KermitLogger
 import com.example.data.mappers.toDomain
 import com.example.data.mappers.toEntity
 import com.example.data.mappers.toLastMessageView
@@ -9,6 +11,7 @@ import com.example.database.entities.ChatWithParticipants
 import com.example.database.my_database.MyDataBase
 import com.example.domain.chat.ChatRepository
 import com.example.domain.chat.ChatService
+import com.example.domain.logging.MyLogger
 import com.example.domain.models.Chat
 import com.example.domain.models.ChatInfo
 import com.example.domain.models.ChatParticipant
@@ -18,18 +21,32 @@ import com.example.domain.util.EmptyResult
 import com.example.domain.util.asEmptyResult
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.supervisorScope
 
+@OptIn(DelicateCoroutinesApi::class)
 class OfflineFirstChatRepository(
     private val chatService: ChatService,
-    private val myDataBase: MyDataBase
+    private val myDataBase: MyDataBase,
+    private val appLifeCycleObserver: AppLifeCycleObserver,
+    private val myLogger: MyLogger = KermitLogger
 ) : ChatRepository {
+
+    init {
+        appLifeCycleObserver.isInForeground.onEach {
+            myLogger.debug("App is in foreground: $it")
+        }.launchIn(GlobalScope)
+    }
+
     override fun getChats(): Flow<List<Chat>> {
         return myDataBase.chatDao.getChatsWithParticipants()
             .map { participants ->
@@ -133,10 +150,10 @@ class OfflineFirstChatRepository(
             chatId = chatId,
             idsList = userIds
         )
-            .onSuccess {
+            .onSuccess { chat ->
                 myDataBase.chatDao.upsertChatWithParticipantsAndCrossRef(
-                    chat = it.toEntity(),
-                    participants = it.memberList.map { it.toEntity() },
+                    chat = chat.toEntity(),
+                    participants = chat.memberList.map { it.toEntity() },
                     chatParticipantDao = myDataBase.chatParticipantDao,
                     chatParticipantCrossRefDao = myDataBase.chatParticipantCrossRefDao
                 )

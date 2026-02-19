@@ -20,7 +20,7 @@ import cmpcourseapp.feature.chat.presentation.generated.resources.no_messages_su
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.theme.MyTheme
 import com.example.domain.models.DeliveryStatus
-import com.example.presentation.components.EmptyListSection
+import com.example.presentation.components.EmptySection
 import com.example.presentation.model.MessageUi
 import com.example.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
@@ -44,7 +44,7 @@ fun MessageList(
                 .padding(vertical = 32.dp),
             contentAlignment = Alignment.Center
         ) {
-            EmptyListSection(
+            EmptySection(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_subtitle),
             )

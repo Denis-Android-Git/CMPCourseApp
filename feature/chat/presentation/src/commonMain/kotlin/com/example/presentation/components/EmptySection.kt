@@ -20,7 +20,7 @@ import com.example.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun EmptyListSection(
+fun EmptySection(
     modifier: Modifier = Modifier,
     title: String,
     description: String
