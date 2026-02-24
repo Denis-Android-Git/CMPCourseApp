@@ -5,6 +5,7 @@ import com.example.data.logging.KermitLogger
 import com.example.data.mappers.toDomain
 import com.example.data.mappers.toEntity
 import com.example.data.mappers.toLastMessageView
+import com.example.data.network.ConnectivityObserver
 import com.example.database.entities.ChatInfoEntity
 import com.example.database.entities.ChatParticipantEntity
 import com.example.database.entities.ChatWithParticipants
@@ -37,13 +38,13 @@ import kotlinx.coroutines.supervisorScope
 class OfflineFirstChatRepository(
     private val chatService: ChatService,
     private val myDataBase: MyDataBase,
-    private val appLifeCycleObserver: AppLifeCycleObserver,
-    private val myLogger: MyLogger = KermitLogger
+    private val myLogger: MyLogger = KermitLogger,
+    connectivityObserver: ConnectivityObserver
 ) : ChatRepository {
 
     init {
-        appLifeCycleObserver.isInForeground.onEach {
-            myLogger.debug("App is in foreground: $it")
+        connectivityObserver.isConnected.onEach {
+            myLogger.debug("App is in connected: $it")
         }.launchIn(GlobalScope)
     }
 
