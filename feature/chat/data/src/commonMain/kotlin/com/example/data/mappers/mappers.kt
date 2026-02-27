@@ -3,6 +3,7 @@ package com.example.data.mappers
 import com.example.data.dto.ChatDto
 import com.example.data.dto.ChatMessageDto
 import com.example.data.dto.ChatParticipantDto
+import com.example.data.dto.ws.OutgoingWsDto
 import com.example.database.entities.ChatEntity
 import com.example.database.entities.ChatInfoEntity
 import com.example.database.entities.ChatMessageEntity
@@ -19,6 +20,7 @@ import kotlin.time.Instant
 
 typealias DataMessageWithSender = com.example.database.entities.MessageWithSender
 typealias DomainMessageWithSender = MessageWithSender
+
 
 fun ChatParticipantDto.toDomain() = ChatParticipant(
     userId = userId,
@@ -81,6 +83,11 @@ fun ChatMessage.toEntity() = ChatMessageEntity(
     deliveryStatus = deliveryStatus.name
 )
 
+fun ChatMessage.toNewMessage() = OutgoingWsDto.NewMessage(
+    messageId = id,
+    chatId = chatId,
+    content = content
+)
 
 fun ChatMessage.toLastMessageView() = LastMessageView(
     messageId = id,
