@@ -1,6 +1,5 @@
 package com.example.data.chat
 
-import com.example.data.lifeCycle.AppLifeCycleObserver
 import com.example.data.logging.KermitLogger
 import com.example.data.mappers.toDomain
 import com.example.data.mappers.toEntity

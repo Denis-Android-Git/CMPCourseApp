@@ -3,6 +3,7 @@ package com.example.data.mappers
 import com.example.data.dto.ChatDto
 import com.example.data.dto.ChatMessageDto
 import com.example.data.dto.ChatParticipantDto
+import com.example.data.dto.ws.IncomingWsDto
 import com.example.data.dto.ws.OutgoingWsDto
 import com.example.database.entities.ChatEntity
 import com.example.database.entities.ChatInfoEntity
@@ -133,5 +134,14 @@ fun ChatInfoEntity.toDomain() = ChatInfo(
         participants = this.participants.map { it.toDomain() }
     ),
     messages = messagesWithSenders.map { it.toDomain() }
+)
+
+fun IncomingWsDto.NewMessage.toEntity() = ChatMessageEntity(
+    messageId = id,
+    chatId = chatId,
+    senderId = senderId,
+    content = content,
+    timeStamp = Instant.parse(createdAt).toEpochMilliseconds(),
+    deliveryStatus = DeliveryStatus.SENT.name
 )
 
