@@ -1,6 +1,7 @@
 package com.example.data.di
 
 import com.example.data.lifeCycle.AppLifeCycleObserver
+import com.example.data.network.ConnectionErrorHandler
 import com.example.data.network.ConnectivityObserver
 import com.example.database.my_database.DbFactory
 import org.koin.core.module.dsl.singleOf
@@ -10,5 +11,6 @@ actual val platformChatDataModule = module {
     single { DbFactory() }
     singleOf(::AppLifeCycleObserver)
     singleOf(::ConnectivityObserver)
+    singleOf(::ConnectionErrorHandler)
 
 }

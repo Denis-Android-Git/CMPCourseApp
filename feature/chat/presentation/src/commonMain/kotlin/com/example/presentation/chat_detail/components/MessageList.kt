@@ -59,9 +59,9 @@ fun MessageList(
         ) {
             items(
                 messages,
-                key = {
-                    it.id
-                }
+//                key = {
+//                    //it.id
+//                }
             ) { message ->
                 MessageListItemUi(
                     messageUi = message,
@@ -69,7 +69,9 @@ fun MessageList(
                     onDismissMessageMenu = onDismissMessageMenu,
                     onDeleteClick = onDeleteClick,
                     onRetryClick = onMessageRetryClick,
-                    modifier = Modifier.fillMaxWidth().animateItem()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        //.animateItem()
                 )
             }
         }

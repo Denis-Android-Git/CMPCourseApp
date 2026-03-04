@@ -41,12 +41,6 @@ class OfflineFirstChatRepository(
     connectivityObserver: ConnectivityObserver
 ) : ChatRepository {
 
-    init {
-        connectivityObserver.isConnected.onEach {
-            myLogger.debug("App is in connected: $it")
-        }.launchIn(GlobalScope)
-    }
-
     override fun getChats(): Flow<List<Chat>> {
         return myDataBase.chatDao.getChatsWithParticipants()
             .map { participants ->

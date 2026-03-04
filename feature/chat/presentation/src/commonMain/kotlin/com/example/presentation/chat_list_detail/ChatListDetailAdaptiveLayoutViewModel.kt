@@ -2,13 +2,17 @@ package com.example.presentation.chat_list_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.chat.ChatConnectionClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class ChatListDetailAdaptiveLayoutViewModel : ViewModel() {
+class ChatListDetailAdaptiveLayoutViewModel(
+    private val connectionClient: ChatConnectionClient
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -16,7 +20,7 @@ class ChatListDetailAdaptiveLayoutViewModel : ViewModel() {
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                connectionClient.chatMessages.launchIn(viewModelScope)
                 hasLoadedInitialData = true
             }
         }

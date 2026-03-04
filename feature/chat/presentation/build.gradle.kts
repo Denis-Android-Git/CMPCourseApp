@@ -27,6 +27,9 @@ kotlin {
                 implementation(libs.jetbrains.navigation3.ui)
                 implementation(libs.androidx.navigationevent)
 
+                implementation(libs.kotlinx.datetime)
+
+
             }
         }
         androidMain {
