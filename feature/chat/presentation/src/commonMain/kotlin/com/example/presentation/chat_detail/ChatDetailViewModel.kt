@@ -1,6 +1,7 @@
 package com.example.presentation.chat_detail
 
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.auth.SessionStorage
@@ -8,6 +9,7 @@ import com.example.domain.chat.ChatConnectionClient
 import com.example.domain.chat.ChatRepository
 import com.example.domain.message.MessageRepository
 import com.example.domain.models.ConnectionState
+import com.example.domain.models.OutgoingNewMessage
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
 import com.example.presentation.mappers.toUi
@@ -28,6 +30,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
@@ -73,6 +77,7 @@ class ChatDetailViewModel(
             if (!hasLoadedInitialData) {
                 observeConnectionState()
                 observeChatMessages()
+                observeCanSendMessage()
                 hasLoadedInitialData = true
             }
         }
@@ -95,7 +100,53 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnMessageLongClick -> {}
             is ChatDetailAction.OnRetryClick -> {}
             ChatDetailAction.OnScrollToTop -> {}
-            ChatDetailAction.OnSendMessageClick -> {}
+            ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+
+    private val canSendMessage = snapshotFlow {
+        _state.value.messageTextFieldState.text.toString()
+    }.map { it.isBlank() }
+        .combine(
+            connectionClient.connectionState
+        ) { isBlank, connectionState ->
+
+            !isBlank && connectionState == ConnectionState.CONNECTED
+        }
+
+
+    private fun observeCanSendMessage() {
+        canSendMessage
+            .onEach { canSend ->
+                _state.update {
+                    it.copy(
+                        canSendMessage = canSend
+                    )
+                }
+            }.launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private fun sendMessage() {
+        val currentChatId = _chatId.value
+        val messageText = state.value.messageTextFieldState.text.toString().trim()
+        if (messageText.isBlank() || currentChatId == null) return
+
+        viewModelScope.launch {
+            val message = OutgoingNewMessage(
+                chatId = currentChatId,
+                messageId = Uuid.random().toString(),
+                content = messageText
+            )
+            messageRepository.sendMessage(message)
+                .onSuccess {
+                    state.value.messageTextFieldState.clearText()
+
+                }
+                .onFailure {
+                    eventChannel.send(ChatDetailEvent.OnError(it.toUiText()))
+                }
         }
     }
 

@@ -2,7 +2,6 @@ package com.example.presentation.chat_detail.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
@@ -32,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MessageBox(
     modifier: Modifier = Modifier,
     messageState: TextFieldState,
-    isTextInputEnabled: Boolean,
+    isSendButtonEnabled: Boolean,
     connectionState: ConnectionState,
     onSendMessage: () -> Unit
 ) {
@@ -41,7 +40,6 @@ fun MessageBox(
         modifier = modifier,
         state = messageState,
         placeholder = stringResource(Res.string.send_a_message),
-        enabled = isTextInputEnabled,
         onKeyboardActions = onSendMessage,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Send
@@ -69,7 +67,7 @@ fun MessageBox(
             MyButton(
                 text = stringResource(Res.string.send),
                 onClick = onSendMessage,
-                enabled = isTextInputEnabled && isConnected
+                enabled = isSendButtonEnabled && isConnected
             )
         }
     )
@@ -81,7 +79,7 @@ fun MessageBoxPreview() {
     MyTheme {
         MessageBox(
             messageState = rememberTextFieldState(),
-            isTextInputEnabled = true,
+            isSendButtonEnabled = true,
             connectionState = ConnectionState.ERROR_NETWORK,
             onSendMessage = {}
         )

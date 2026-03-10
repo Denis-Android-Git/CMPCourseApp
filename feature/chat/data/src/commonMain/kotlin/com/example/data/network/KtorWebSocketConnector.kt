@@ -4,10 +4,10 @@ import com.example.data.dto.ws.WsMessageDto
 import com.example.data.lifeCycle.AppLifeCycleObserver
 import com.example.data.logging.KermitLogger
 import com.example.domain.auth.SessionStorage
-import com.example.domain.error.ConnectionError
 import com.example.domain.logging.MyLogger
 import com.example.domain.models.ConnectionState
 import com.example.domain.util.CustomResult
+import com.example.domain.util.DataError
 import com.example.domain.util.EmptyResult
 import com.example.feature.chat.data.BuildKonfig
 import io.ktor.client.HttpClient
@@ -207,10 +207,10 @@ class KtorWebSocketConnector(
         }
     }
 
-    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
+    suspend fun sendMessage(message: String): EmptyResult<DataError.Connection> {
         val connectionState = connectionState.value
         if (currentSession == null || connectionState != ConnectionState.CONNECTED) {
-            return CustomResult.Failure(ConnectionError.NOT_CONNECTED)
+            return CustomResult.Failure(DataError.Connection.NOT_CONNECTED)
         }
         return try {
             currentSession?.send(message)
@@ -218,7 +218,7 @@ class KtorWebSocketConnector(
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
             myLogger.error("KtorWebSocketConnector sendMessage error", e)
-            CustomResult.Failure(ConnectionError.MESSAGE_SEND_FAILED)
+            CustomResult.Failure(DataError.Connection.MESSAGE_SEND_FAILED)
         }
 
     }

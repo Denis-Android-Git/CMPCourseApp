@@ -5,18 +5,11 @@ import com.example.data.dto.ws.IncomingWsType
 import com.example.data.dto.ws.WsMessageDto
 import com.example.data.mappers.toDomain
 import com.example.data.mappers.toEntity
-import com.example.data.mappers.toNewMessage
 import com.example.data.network.KtorWebSocketConnector
 import com.example.database.my_database.MyDataBase
 import com.example.domain.auth.SessionStorage
 import com.example.domain.chat.ChatConnectionClient
 import com.example.domain.chat.ChatRepository
-import com.example.domain.error.ConnectionError
-import com.example.domain.message.MessageRepository
-import com.example.domain.models.ChatMessage
-import com.example.domain.models.DeliveryStatus
-import com.example.domain.util.EmptyResult
-import com.example.domain.util.onFailure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterIsInstance
@@ -27,12 +20,11 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.serialization.json.Json
 
 class WsChatConnectionClient(
-    private val ktorWebSocketConnector: KtorWebSocketConnector,
+    ktorWebSocketConnector: KtorWebSocketConnector,
     private val chatRepository: ChatRepository,
     private val dataBase: MyDataBase,
     private val sessionStorage: SessionStorage,
     private val json: Json,
-    private val messageRepository: MessageRepository,
     applicationScope: CoroutineScope
 ) : ChatConnectionClient {
     override val chatMessages = ktorWebSocketConnector
@@ -50,38 +42,22 @@ class WsChatConnectionClient(
 
     override val connectionState = ktorWebSocketConnector.connectionState
 
-    override suspend fun sendMessage(message: ChatMessage): EmptyResult<ConnectionError> {
-        val outgoingDto = message.toNewMessage()
-        val wsMessage = WsMessageDto(
-            type = outgoingDto.type.name,
-            payLoad = json.encodeToString(outgoingDto)
-        )
-        val rawJson = json.encodeToString(wsMessage)
-        return ktorWebSocketConnector.sendMessage(rawJson)
-            .onFailure {
-                messageRepository.updateMessageDeliveryStatus(
-                    messageId = message.id,
-                    deliveryStatus = DeliveryStatus.FAILED
-                )
-            }
-    }
-
     private fun parseIncomingMessage(message: WsMessageDto): IncomingWsDto? {
         return when (message.type) {
             IncomingWsType.NEW_MESSAGE.name -> {
-                json.decodeFromString<IncomingWsDto.NewMessage>(message.payLoad)
+                json.decodeFromString<IncomingWsDto.NewMessage>(message.payload)
             }
 
             IncomingWsType.MESSAGE_DELETED.name -> {
-                json.decodeFromString<IncomingWsDto.MessageDeleted>(message.payLoad)
+                json.decodeFromString<IncomingWsDto.MessageDeleted>(message.payload)
             }
 
             IncomingWsType.PROFILE_PICTURE_UPDATED.name -> {
-                json.decodeFromString<IncomingWsDto.ProfilePictureUpdated>(message.payLoad)
+                json.decodeFromString<IncomingWsDto.ProfilePictureUpdated>(message.payload)
             }
 
             IncomingWsType.CHAT_PARTICIPANTS_CHANGED.name -> {
-                json.decodeFromString<IncomingWsDto.ChatParticipantsUpdated>(message.payLoad)
+                json.decodeFromString<IncomingWsDto.ChatParticipantsUpdated>(message.payload)
             }
 
             else -> null

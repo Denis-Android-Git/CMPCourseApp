@@ -219,7 +219,7 @@ fun ChatDetailScreen(
                         ) {
                             MessageBox(
                                 messageState = state.messageTextFieldState,
-                                isTextInputEnabled = state.canSendMessage,
+                                isSendButtonEnabled = state.canSendMessage,
                                 connectionState = state.connectionState,
                                 onSendMessage = {
                                     onAction(ChatDetailAction.OnSendMessageClick)
@@ -241,7 +241,7 @@ fun ChatDetailScreen(
                     ) {
                         MessageBox(
                             messageState = state.messageTextFieldState,
-                            isTextInputEnabled = state.canSendMessage,
+                            isSendButtonEnabled = state.canSendMessage,
                             connectionState = state.connectionState,
                             onSendMessage = {
                                 onAction(ChatDetailAction.OnSendMessageClick)

@@ -17,6 +17,8 @@ import com.example.domain.models.ChatMessage
 import com.example.domain.models.ChatParticipant
 import com.example.domain.models.DeliveryStatus
 import com.example.domain.models.MessageWithSender
+import com.example.domain.models.OutgoingNewMessage
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 typealias DataMessageWithSender = com.example.database.entities.MessageWithSender
@@ -144,4 +146,24 @@ fun IncomingWsDto.NewMessage.toEntity() = ChatMessageEntity(
     timeStamp = Instant.parse(createdAt).toEpochMilliseconds(),
     deliveryStatus = DeliveryStatus.SENT.name
 )
+
+fun OutgoingNewMessage.toWsDto() = OutgoingWsDto.NewMessage(
+    messageId = messageId,
+    chatId = chatId,
+    content = content
+)
+
+fun OutgoingWsDto.NewMessage.toEntity(
+    senderId: String,
+    deliveryStatus: DeliveryStatus
+) = ChatMessageEntity(
+    messageId = messageId,
+    chatId = chatId,
+    senderId = senderId,
+    content = content,
+    timeStamp = Clock.System.now().toEpochMilliseconds(),
+    deliveryStatus = deliveryStatus.name
+)
+
+
 
