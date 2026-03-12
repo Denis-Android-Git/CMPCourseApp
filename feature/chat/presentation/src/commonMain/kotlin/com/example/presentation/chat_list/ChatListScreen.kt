@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,27 +42,29 @@ import com.example.designsystem.theme.extended
 import com.example.presentation.chat_list.components.ChatListHeader
 import com.example.presentation.chat_list.components.ChatListItem
 import com.example.presentation.components.EmptySection
-import com.example.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListScreenRoot(
+    selectedChatId: String?,
     viewModel: ChatListScreenViewModel = koinViewModel(),
-    onChatClicked: (ChatUi) -> Unit,
+    onChatClicked: (String?) -> Unit,
     onConfirmLogoutClicked: () -> Unit,
     onCreateChatClicked: () -> Unit,
     onProfileSettingsClicked: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-
+    LaunchedEffect(selectedChatId) {
+        viewModel.onAction(ChatListScreenAction.OnSelectChat(selectedChatId))
+    }
     ChatListScreenScreen(
         state = state,
         onAction = {
             when (it) {
-                is ChatListScreenAction.OnChatClicked -> onChatClicked(it.chat)
+                is ChatListScreenAction.OnSelectChat -> onChatClicked(it.chatId)
                 ChatListScreenAction.OnConfirmLogoutClicked -> onConfirmLogoutClicked()
                 ChatListScreenAction.OnCreateChatClicked -> onCreateChatClicked()
                 ChatListScreenAction.OnProfileSettingsClicked -> onProfileSettingsClicked()
@@ -91,7 +94,8 @@ fun ChatListScreenScreen(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add, contentDescription = stringResource(Res.string.add)
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.add)
                 )
             }
         }
@@ -145,7 +149,7 @@ fun ChatListScreenScreen(
                                 isSelected = chatUi.id == state.selectedChatId,
                                 modifier = Modifier.fillMaxWidth()
                                     .clickable {
-                                        onAction(ChatListScreenAction.OnChatClicked(chatUi))
+                                        onAction(ChatListScreenAction.OnSelectChat(chatUi.id))
                                     }
                             )
                             MyHorizontalDivider()

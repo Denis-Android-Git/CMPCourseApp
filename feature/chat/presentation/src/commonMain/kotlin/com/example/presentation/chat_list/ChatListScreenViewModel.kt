@@ -46,10 +46,10 @@ class ChatListScreenViewModel(
 
     fun onAction(action: ChatListScreenAction) {
         when (action) {
-            is ChatListScreenAction.OnChatClicked -> {
+            is ChatListScreenAction.OnSelectChat -> {
                 _state.update {
                     it.copy(
-                        selectedChatId = action.chat.id
+                        selectedChatId = action.chatId
                     )
                 }
             }

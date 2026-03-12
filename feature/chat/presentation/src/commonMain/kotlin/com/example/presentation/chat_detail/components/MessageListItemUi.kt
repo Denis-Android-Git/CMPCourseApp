@@ -52,7 +52,11 @@ fun MessageListItemUi(
         modifier = modifier
     ) {
         when (messageUi) {
-            is MessageUi.DateSeparator -> DateSeparatorUi(date = messageUi.date.asString(), modifier = Modifier.fillMaxWidth())
+            is MessageUi.DateSeparator -> DateSeparatorUi(
+                date = messageUi.date.asString(),
+                modifier = Modifier.fillMaxWidth()
+            )
+
             is MessageUi.LocalUserMessage -> LocalUserMessageUi(
                 messageUi = messageUi,
                 modifier = modifier,
@@ -82,7 +86,9 @@ private fun DateSeparatorUi(
     ) {
         HorizontalDivider(modifier = Modifier.weight(1f))
         Text(
-            text = date, modifier = Modifier.padding(horizontal = 40.dp), color = MaterialTheme.colorScheme.extended.textPlaceholder,
+            text = date,
+            modifier = Modifier.padding(horizontal = 40.dp),
+            color = MaterialTheme.colorScheme.extended.textPlaceholder,
             style = MaterialTheme.typography.labelSmall
         )
         HorizontalDivider(modifier = Modifier.weight(1f))
@@ -103,9 +109,7 @@ private fun LocalUserMessageUi(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
     ) {
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
+        Box {
             MyChatBubble(
                 messageContent = messageUi.content,
                 userName = stringResource(Res.string.you),

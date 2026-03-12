@@ -5,11 +5,13 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -72,7 +74,8 @@ fun MyChatBubble(
                 },
                 top = padding,
                 bottom = padding
-            ),
+            )
+            .width(IntrinsicSize.Max),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
@@ -80,17 +83,21 @@ fun MyChatBubble(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = userName, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.extended.textSecondary,
+                text = userName,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.extended.textSecondary,
                 modifier = Modifier.weight(1f)
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.width(20.dp))
             Text(
-                text = formattedTime, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.extended.textSecondary
+                text = formattedTime,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.extended.textSecondary
             )
         }
         Text(
             text = messageContent,
-            style = MaterialTheme.typography.bodyLarge ,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.extended.textPrimary,
             modifier = Modifier.fillMaxWidth()
         )

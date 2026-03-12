@@ -56,6 +56,7 @@ import com.example.presentation.util.ObserveAsEvents
 import com.example.presentation.util.UiText
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -106,7 +107,11 @@ fun ChatDetailRoot(
             }
         },
         onBackCompleted = {
-            viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+            scope.launch {
+                delay(300)// Add artificial delay to prevent detail back animation from showing
+                // an unselected chat the moment we go back
+                viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+            }
             onBack()
         }
     )

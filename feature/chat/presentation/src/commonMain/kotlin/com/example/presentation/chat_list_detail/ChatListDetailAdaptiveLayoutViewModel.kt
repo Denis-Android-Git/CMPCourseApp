@@ -32,7 +32,7 @@ class ChatListDetailAdaptiveLayoutViewModel(
 
     fun onAction(action: ChatListDetailAdaptiveLayoutAction) {
         when (action) {
-            is ChatListDetailAdaptiveLayoutAction.OnChatClicked -> {
+            is ChatListDetailAdaptiveLayoutAction.OnSelectChat -> {
                 _state.update {
                     it.copy(
                         selectedChatId = action.chatId

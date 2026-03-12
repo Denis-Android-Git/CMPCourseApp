@@ -24,7 +24,6 @@ import com.example.presentation.chat_detail.ChatDetailRoot
 import com.example.presentation.chat_list.ChatListScreenRoot
 import com.example.presentation.create_chat.CreateChatRoot
 import com.example.presentation.manage_chat.ManageChatRoot
-import com.example.presentation.model.ChatUi
 import com.example.presentation.util.DialogScopedViewmodelScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -43,10 +42,10 @@ fun ChatListDetailAdaptiveLayoutRoot(
         },
         onChatCreated = {
             viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnDismissCurrentChatClicked)
-            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnChatClicked(it.id))
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnSelectChat(it.id))
         },
         onChatClicked = {
-            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnChatClicked(it?.id))
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnSelectChat(it))
         },
         onConfirmLogoutClicked = onConfirmLogoutClicked,
         onCreateChatClicked = {
@@ -57,6 +56,9 @@ fun ChatListDetailAdaptiveLayoutRoot(
         },
         onChatMembersClick = {
             viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnManageChatClicked)
+        },
+        onBack = {
+            viewModel.onAction(ChatListDetailAdaptiveLayoutAction.OnSelectChat(null))
         }
     )
 }
@@ -67,12 +69,13 @@ fun ChatListDetailAdaptiveLayoutScreen(
     state: ChatListDetailAdaptiveLayoutState,
     onDismiss: () -> Unit,
     onChatCreated: (Chat) -> Unit,
-    onChatClicked: (ChatUi?) -> Unit,
+    onChatClicked: (String?) -> Unit,
     onConfirmLogoutClicked: () -> Unit,
     onCreateChatClicked: () -> Unit,
     onProfileSettingsClicked: () -> Unit,
     onChatMembersClick: () -> Unit,
-    myLogger: MyLogger = KermitLogger
+    myLogger: MyLogger = KermitLogger,
+    onBack: () -> Unit
 ) {
     val scaffoldDirective = createNoSpacingPaneScaffoldDirective()
     val navigator = rememberListDetailPaneScaffoldNavigator(
@@ -92,6 +95,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
     ) {
         scope.launch {
             navigator.navigateBack()
+            onBack()
         }
     }
     ListDetailPaneScaffold(
@@ -109,7 +113,8 @@ fun ChatListDetailAdaptiveLayoutScreen(
                     },
                     onConfirmLogoutClicked = onConfirmLogoutClicked,
                     onCreateChatClicked = onCreateChatClicked,
-                    onProfileSettingsClicked = onProfileSettingsClicked
+                    onProfileSettingsClicked = onProfileSettingsClicked,
+                    selectedChatId = state.selectedChatId,
                 )
             }
         },
