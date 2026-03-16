@@ -13,6 +13,7 @@ import com.example.domain.message.ChatMessageService
 import com.example.domain.message.MessageRepository
 import com.example.domain.models.ChatMessage
 import com.example.domain.models.DeliveryStatus
+import com.example.domain.models.MessageWithSender
 import com.example.domain.models.OutgoingNewMessage
 import com.example.domain.util.CustomResult
 import com.example.domain.util.DataError
@@ -69,7 +70,7 @@ class OfflineFirstMessageRepository(
 
     }
 
-    override fun getMessagesForChat(chatId: String): Flow<List<com.example.domain.models.MessageWithSender>> {
+    override fun getMessagesForChat(chatId: String): Flow<List<MessageWithSender>> {
         return myDataBase.chatMessageDao.getMessagesByChatId(chatId)
             .map { messageEntities ->
                 messageEntities.map { it.toDomain() }
@@ -83,21 +84,47 @@ class OfflineFirstMessageRepository(
                 sessionStorage.observeAuthInfo().first()?.user ?: return CustomResult.Failure(
                     DataError.Local.FILE_NOT_FOUND
                 )
+            val entity = dto.toEntity(localUser.id, deliveryStatus = DeliveryStatus.SENDING)
             myDataBase.chatMessageDao.upsertChatMessage(
-                dto.toEntity(
-                    localUser.id,
-                    deliveryStatus = DeliveryStatus.SENDING
-                )
+                entity
             )
             return webSocketConnector
                 .sendMessage(dto.toJsonPayload())
                 .onFailure {
                     applicationScope.launch {
-                        myDataBase.chatMessageDao.upsertChatMessage(
-                            dto.toEntity(
-                                localUser.id,
-                                deliveryStatus = DeliveryStatus.FAILED
-                            )
+                        myDataBase.chatMessageDao.updateDeliveryStatus(
+                            messageId = entity.messageId,
+                            status = DeliveryStatus.FAILED.name,
+                            timestamp = Clock.System.now().toEpochMilliseconds()
+                        )
+                    }.join()
+                }
+        }
+    }
+
+    override suspend fun retrySendingMessage(messageId: String): EmptyResult<DataError> {
+        return safeDbUpdate {
+            val message =
+                myDataBase.chatMessageDao.getMessageById(messageId) ?: return CustomResult.Failure(
+                    DataError.Local.FILE_NOT_FOUND
+                )
+            myDataBase.chatMessageDao.updateDeliveryStatus(
+                messageId,
+                DeliveryStatus.SENDING.name,
+                timestamp = Clock.System.now().toEpochMilliseconds()
+            )
+            val outgoingNewMessage = OutgoingWsDto.NewMessage(
+                messageId = messageId,
+                chatId = message.chatId,
+                content = message.content
+            )
+            return webSocketConnector.sendMessage(outgoingNewMessage.toJsonPayload())
+                .onFailure {
+                    applicationScope.launch {
+                        myDataBase.chatMessageDao.updateDeliveryStatus(
+                            messageId = messageId,
+                            status = DeliveryStatus.FAILED.name,
+                            timestamp = Clock.System.now().toEpochMilliseconds()
                         )
                     }.join()
                 }

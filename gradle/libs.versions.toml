@@ -2,9 +2,9 @@
 [versions]
 # Build tools
 agp = "8.13.2"
-componentsResources = "1.10.1"
-composeBom = "2026.02.01"
-foundation = "1.10.1"
+componentsResources = "1.10.2"
+composeBom = "2026.03.00"
+foundation = "1.10.2"
 kotlin = "2.3.10"
 ksp = "2.3.5"
 google-services = "4.4.4"
@@ -14,7 +14,7 @@ androidTools = "32.1.0"
 
 # Compose
 compose-hot-reload = "1.0.0"
-compose-multiplatform = "1.10.1"
+compose-multiplatform = "1.10.2"
 # Maintain compose multiplatform version aligned with navigation, cache error could happen
 compose-lifecycle = "2.9.6"
 material3 = "1.9.0"
@@ -70,8 +70,8 @@ projectVersionCode = "1"
 # Desktop Version
 desktopPackageName = "CmpCourseApp"
 desktopPackageVersion = "1.0.0"
-ui = "1.10.1"
-uiToolingPreview = "1.10.1"
+ui = "1.10.2"
+uiToolingPreview = "1.10.2"
 
 [libraries]
 
@@ -81,7 +81,7 @@ jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:naviga
 
 # Kotlin
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "compose-lifecycle" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
 components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "componentsResources" }
