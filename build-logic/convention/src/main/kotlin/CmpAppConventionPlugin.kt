@@ -1,4 +1,4 @@
-import com.example.cmpcourseapp.convention.configureAndroidTarget
+import com.example.cmpcourseapp.convention.configureAndroidLibraryTarget
 import com.example.cmpcourseapp.convention.configureIosTargets
 import com.example.cmpcourseapp.convention.libs
 import org.gradle.api.Plugin
@@ -9,7 +9,7 @@ class CmpAppConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply("com.example.convention.android.application.compose")
+                apply("com.android.kotlin.multiplatform.library")
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.compose")
                 apply("org.jetbrains.kotlin.plugin.compose")
@@ -17,9 +17,9 @@ class CmpAppConventionPlugin : Plugin<Project> {
 
             }
             dependencies {
-                "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
+                "androidMainImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
             }
-            configureAndroidTarget()
+            configureAndroidLibraryTarget()
             configureIosTargets()
         }
     }

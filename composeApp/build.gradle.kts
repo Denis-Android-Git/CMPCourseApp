@@ -4,6 +4,15 @@ plugins {
 }
 
 kotlin {
+
+    androidLibrary {
+        compileSdk = 36
+        minSdk = 26
+        namespace = "org.example.cmpcourseapp.common"
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.ui.tooling.preview)

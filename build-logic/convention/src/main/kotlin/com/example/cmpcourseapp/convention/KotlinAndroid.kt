@@ -1,5 +1,6 @@
 package com.example.cmpcourseapp.convention
 
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
@@ -7,7 +8,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>
+    commonExtension: ApplicationExtension
 ) {
     with(commonExtension) {
         compileSdk = libs.findVersion("projectCompileSdkVersion").get().toString().toInt()

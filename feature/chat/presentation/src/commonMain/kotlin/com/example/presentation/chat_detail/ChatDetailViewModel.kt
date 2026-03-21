@@ -36,7 +36,7 @@ import kotlin.uuid.Uuid
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
-    private val sessionStorage: SessionStorage,
+    sessionStorage: SessionStorage,
     private val messageRepository: MessageRepository,
     private val connectionClient: ChatConnectionClient
 ) : ViewModel() {

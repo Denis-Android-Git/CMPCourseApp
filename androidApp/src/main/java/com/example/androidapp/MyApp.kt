@@ -1,4 +1,4 @@
-package com.example.cmpcourseapp
+package com.example.androidapp
 
 import android.app.Application
 import com.example.cmpcourseapp.di.initKoin

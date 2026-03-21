@@ -1,4 +1,4 @@
-package com.example.cmpcourseapp
+package com.example.androidapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.database.my_database.MyDataBase
-import org.koin.android.ext.android.inject
+import com.example.cmpcourseapp.App
 
 class MainActivity : ComponentActivity() {
 

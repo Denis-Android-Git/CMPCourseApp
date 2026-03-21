@@ -1,11 +1,11 @@
 
 [versions]
 # Build tools
-agp = "8.13.2"
+agp = "9.1.0"
 componentsResources = "1.10.2"
 composeBom = "2026.03.00"
-foundation = "1.10.2"
-kotlin = "2.3.10"
+foundation = "1.10.3"
+kotlin = "2.3.20"
 ksp = "2.3.5"
 google-services = "4.4.4"
 
@@ -16,7 +16,7 @@ androidTools = "32.1.0"
 compose-hot-reload = "1.0.0"
 compose-multiplatform = "1.10.2"
 # Maintain compose multiplatform version aligned with navigation, cache error could happen
-compose-lifecycle = "2.9.6"
+compose-lifecycle = "2.10.0"
 material3 = "1.9.0"
 navigation-compose = "2.9.2"
 jetbrains-core-bundle = "1.0.1"
@@ -37,16 +37,16 @@ kotlinx-serialization = "1.10.0"
 kotlinx-datetime = "0.7.1"
 
 # Third party
-koin = "4.1.1"
+koin = "4.2.0"
 ktor = "3.4.1"
 navigationevent = "1.0.2"
 room = "2.8.4"
-runtime = "1.10.2"
+runtime = "1.10.3"
 sqlite = "2.6.2"
 datastore = "1.2.1"
-firebase-bom = "34.10.0"
+firebase-bom = "34.11.0"
 adaptive = "1.2.0"
-compose-jetbrains = "1.8.2"
+compose-material3 = "1.9.0"
 jetbrains-savedstate = "1.4.0"
 coil = "3.4.0"
 coil-network = "3.4.0"
@@ -70,8 +70,11 @@ projectVersionCode = "1"
 # Desktop Version
 desktopPackageName = "CmpCourseApp"
 desktopPackageVersion = "1.0.0"
-ui = "1.10.2"
+ui = "1.10.3"
 uiToolingPreview = "1.10.2"
+junitVersion = "4.13.2"
+espressoCore = "3.7.0"
+material = "1.13.0"
 
 [libraries]
 
@@ -115,6 +118,11 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 # Compose
 jetbrains-compose-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose-multiplatform" }
 jetbrains-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+
+
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -172,12 +180,12 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
-jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref="compose-jetbrains" }
-jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref="compose-jetbrains"}
+jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref= "compose-multiplatform" }
+jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref= "compose-material3" }
 jetbrains-compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "material-icons"}
 jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material-icons"}
-jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref="compose-jetbrains"}
-jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref="compose-jetbrains"}
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref= "compose-multiplatform" }
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref="compose-multiplatform"}
 
 jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "compose-lifecycle" }
 jetbrains-lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
@@ -192,6 +200,9 @@ buildkonfig-gradlePlugin = { group = "com.codingfeline.buildkonfig", name = "bui
 buildkonfig-compiler = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-compiler", version.ref = "buildkonfig" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 ui-v1100 = { module = "org.jetbrains.compose.ui:ui", version.ref = "ui" }
+junit = { group = "junit", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 convention-android-application = { id = "com.example.convention.android.application", version = "no" }
