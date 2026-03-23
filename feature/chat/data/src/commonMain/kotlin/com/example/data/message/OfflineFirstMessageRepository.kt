@@ -131,6 +131,16 @@ class OfflineFirstMessageRepository(
         }
     }
 
+    override suspend fun deleteMessage(messageId: String): EmptyResult<DataError.Remote> {
+        return chatMessageService
+            .deleteMessage(messageId)
+            .onSuccess {
+                applicationScope.launch {
+                    myDataBase.chatMessageDao.deleteChatMessage(messageId)
+                }.join()
+            }
+    }
+
     private fun OutgoingWsDto.NewMessage.toJsonPayload(): String {
         val wsMessage = WsMessageDto(
             type = type.name,

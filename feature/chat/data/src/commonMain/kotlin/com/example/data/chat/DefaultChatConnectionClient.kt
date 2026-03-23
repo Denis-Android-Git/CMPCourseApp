@@ -78,7 +78,7 @@ class WsChatConnectionClient(
     }
 
     private suspend fun deleteMessage(message: IncomingWsDto.MessageDeleted) {
-        dataBase.chatMessageDao.getMessageById(message.messageId)
+        dataBase.chatMessageDao.deleteChatMessage(message.messageId)
     }
 
     private suspend fun handleNewMessage(message: IncomingWsDto.NewMessage) {

@@ -3,7 +3,6 @@ package com.example.presentation.mappers
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.domain.auth.User
 import com.example.domain.models.Chat
-import com.example.domain.models.ChatMessage
 import com.example.domain.models.ChatParticipant
 import com.example.domain.models.MessageWithSender
 import com.example.presentation.model.ChatUi
@@ -33,7 +32,6 @@ fun MessageWithSender.toUi(
             content = message.content,
             deliveryStatus = message.deliveryStatus,
             formattedSentTime = DateUtil.formatMessageTime(message.createdAt),
-            isMenuOpen = false
         )
     } else {
         MessageUi.OtherUserMessage(

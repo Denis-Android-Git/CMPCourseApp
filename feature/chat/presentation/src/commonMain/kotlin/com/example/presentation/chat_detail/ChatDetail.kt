@@ -208,6 +208,7 @@ fun ChatDetailScreen(
                         }
                         MessageList(
                             messages = state.messages,
+                            messageWitOpenMenu = state.messageWithOpenMenu,
                             listState = listState,
                             onMessageLongClick = { onAction(ChatDetailAction.OnMessageLongClick(it)) },
                             onMessageRetryClick = { onAction(ChatDetailAction.OnRetryClick(it)) },
@@ -322,7 +323,6 @@ private fun Preview() {
                             content = "Message $it",
                             deliveryStatus = DeliveryStatus.SENT,
                             formattedSentTime = UiText.DynamicString("12:00"),
-                            isMenuOpen = false
                         )
                     } else {
                         MessageUi.OtherUserMessage(

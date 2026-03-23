@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MessageList(
     modifier: Modifier = Modifier,
     messages: List<MessageUi>,
+    messageWitOpenMenu: MessageUi.LocalUserMessage?,
     listState: LazyListState,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onMessageRetryClick: (MessageUi.LocalUserMessage) -> Unit,
@@ -59,9 +60,9 @@ fun MessageList(
         ) {
             items(
                 messages,
-//                key = {
-//                    //it.id
-//                }
+                key = {
+                    it.id
+                }
             ) { message ->
                 MessageListItemUi(
                     messageUi = message,
@@ -69,9 +70,10 @@ fun MessageList(
                     onDismissMessageMenu = onDismissMessageMenu,
                     onDeleteClick = onDeleteClick,
                     onRetryClick = onMessageRetryClick,
+                    messageWitOpenMenu = messageWitOpenMenu,
                     modifier = Modifier
                         .fillMaxWidth()
-                        //.animateItem()
+                        .animateItem()
                 )
             }
         }
@@ -90,7 +92,6 @@ fun PreviewMessageList() {
                         content = "Hello",
                         deliveryStatus = DeliveryStatus.SENT,
                         formattedSentTime = UiText.DynamicString("12:00"),
-                        isMenuOpen = true
                     ),
                     MessageUi.OtherUserMessage(
                         id = "2",
@@ -111,7 +112,8 @@ fun PreviewMessageList() {
                 onMessageLongClick = {},
                 onMessageRetryClick = {},
                 onDismissMessageMenu = { },
-                onDeleteClick = {}
+                onDeleteClick = {},
+                messageWitOpenMenu = null
             )
         }
     }

@@ -43,6 +43,7 @@ import com.example.presentation.util.getChatColor
 fun MessageListItemUi(
     modifier: Modifier = Modifier,
     messageUi: MessageUi,
+    messageWitOpenMenu: MessageUi.LocalUserMessage?,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit = {},
     onDismissMessageMenu: () -> Unit = {},
     onDeleteClick: (MessageUi.LocalUserMessage) -> Unit = {},
@@ -59,6 +60,7 @@ fun MessageListItemUi(
 
             is MessageUi.LocalUserMessage -> LocalUserMessageUi(
                 messageUi = messageUi,
+                messageWitOpenMenu = messageWitOpenMenu,
                 modifier = modifier,
                 onMessageLongClick = { onMessageLongClick(messageUi) },
                 onDismissMessageMenu = onDismissMessageMenu,
@@ -98,6 +100,7 @@ private fun DateSeparatorUi(
 @Composable
 private fun LocalUserMessageUi(
     messageUi: MessageUi.LocalUserMessage,
+    messageWitOpenMenu: MessageUi.LocalUserMessage?,
     modifier: Modifier = Modifier,
     onMessageLongClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
@@ -125,7 +128,7 @@ private fun LocalUserMessageUi(
                 },
             )
             MyDropDownMenu(
-                isOpen = messageUi.isMenuOpen,
+                isOpen = messageWitOpenMenu?.id == messageUi.id,
                 onDismissRequest = onDismissMessageMenu,
                 items = listOf(
                     DropDownItem(
@@ -188,8 +191,8 @@ fun PreviewLocalUserMessage() {
                     content = "Привет! Как дела, брат? 😊",
                     deliveryStatus = DeliveryStatus.FAILED,
                     formattedSentTime = UiText.DynamicString("12:30"),
-                    isMenuOpen = true
-                )
+                ),
+                messageWitOpenMenu = null
             )
         }
     }
@@ -212,6 +215,7 @@ fun PreviewOtherUserMessage() {
                         initials = "AM"
                     )
                 ),
+                messageWitOpenMenu = null
             )
         }
     }
@@ -227,6 +231,7 @@ fun PreviewDateSeparator() {
                     id = "date_1",
                     date = UiText.DynamicString("Сегодня")
                 ),
+                messageWitOpenMenu = null
             )
         }
     }
