@@ -17,6 +17,7 @@ sealed interface ChatDetailAction {
     data object OnChatMembersClick : ChatDetailAction
     data object OnLeaveChatClick : ChatDetailAction
     data object OnDismissChatOptions : ChatDetailAction
-
-
+    data class OnTopVisibleIndexChanged(val topVisibleIndex: Int) : ChatDetailAction
+    data class OnFirstVisibleIndexChanged(val index: Int) : ChatDetailAction
+    data object OnHideBanner : ChatDetailAction
 }

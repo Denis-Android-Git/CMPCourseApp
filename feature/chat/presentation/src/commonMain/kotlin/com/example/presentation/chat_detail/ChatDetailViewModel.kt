@@ -4,6 +4,8 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmpcourseapp.feature.chat.presentation.generated.resources.Res
+import cmpcourseapp.feature.chat.presentation.generated.resources.today
 import com.example.domain.auth.SessionStorage
 import com.example.domain.chat.ChatConnectionClient
 import com.example.domain.chat.ChatRepository
@@ -18,6 +20,7 @@ import com.example.domain.util.onSuccess
 import com.example.presentation.mappers.toUi
 import com.example.presentation.mappers.toUiList
 import com.example.presentation.model.MessageUi
+import com.example.presentation.util.UiText
 import com.example.presentation.util.toUiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -105,8 +108,6 @@ class ChatDetailViewModel(
     fun onAction(action: ChatDetailAction) {
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
-            ChatDetailAction.OnBackClick -> {}
-            ChatDetailAction.OnChatMembersClick -> {}
             ChatDetailAction.OnChatOptionsClick -> onChatOptionsClick()
             is ChatDetailAction.OnDeleteMessage -> deleteMessage(action.message)
             ChatDetailAction.OnDismissChatOptions -> onDismissChatOptions()
@@ -117,6 +118,63 @@ class ChatDetailViewModel(
             ChatDetailAction.OnScrollToTop -> onScrollToTop()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             ChatDetailAction.OnRetryPaginationClick -> retryPagination()
+            ChatDetailAction.OnHideBanner -> onDismissBanner()
+            is ChatDetailAction.OnTopVisibleIndexChanged -> showBanner(action.topVisibleIndex)
+            is ChatDetailAction.OnFirstVisibleIndexChanged -> updateNearBottom(action.index)
+            else -> Unit
+        }
+    }
+
+    private fun updateNearBottom(index: Int) {
+        _state.update {
+            it.copy(
+                isNearBottom = index <= state.value.messages.size / 2
+            )
+        }
+    }
+
+    private fun showBanner(topVisibleIndex: Int) {
+        val visibleDate = calculateBannerDateFromIndex(state.value.messages, topVisibleIndex)
+
+        _state.update {
+            it.copy(
+                bannerState = BannerState(
+                    formattedDate = visibleDate,
+                    isVisible = visibleDate != null
+                )
+            )
+        }
+    }
+
+    private fun calculateBannerDateFromIndex(
+        messages: List<MessageUi>,
+        index: Int
+    ): UiText? {
+        if (messages.isEmpty() || index < 0 || index >= messages.size) {
+            return null
+        }
+
+        val nearestDateSeparator = (index until messages.size).firstNotNullOfOrNull { index ->
+                val item = messages.getOrNull(index)
+                if (item is MessageUi.DateSeparator) item.date else null
+            }
+
+        return when (nearestDateSeparator) {
+            is UiText.MyStringResource -> {
+                if (nearestDateSeparator.id == Res.string.today) null else nearestDateSeparator
+            }
+
+            else -> nearestDateSeparator
+        }
+    }
+
+    private fun onDismissBanner() {
+        _state.update {
+            it.copy(
+                bannerState = it.bannerState.copy(
+                    isVisible = false
+                )
+            )
         }
     }
 
@@ -271,9 +329,15 @@ class ChatDetailViewModel(
             newMessages,
             isNearBottom
         ) { currentMessages, newMessages, isNearBottom ->
-            val lastNewId = newMessages.lastOrNull()?.message?.id
-            val lastCurrentId = currentMessages.lastOrNull()?.id
-            if (lastNewId != lastCurrentId && isNearBottom) {
+
+            val newestMessageId = newMessages.firstOrNull()?.message?.id
+            val currentNewestId = currentMessages
+                .asSequence()
+                .filterNot { it is MessageUi.DateSeparator }
+                .firstOrNull()
+                ?.id
+
+            if (newestMessageId != null && newestMessageId != currentNewestId && isNearBottom) {
                 eventChannel.send(ChatDetailEvent.OnNewMessage)
             }
         }.launchIn(viewModelScope)

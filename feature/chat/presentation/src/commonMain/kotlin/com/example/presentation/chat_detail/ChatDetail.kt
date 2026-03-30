@@ -1,6 +1,8 @@
 package com.example.presentation.chat_detail
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -21,14 +24,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,6 +54,8 @@ import com.example.domain.logging.MyLogger
 import com.example.domain.models.ConnectionState
 import com.example.domain.models.DeliveryStatus
 import com.example.presentation.chat_detail.components.ChatDetailHeader
+import com.example.presentation.chat_detail.components.DateChip
+import com.example.presentation.chat_detail.components.MessageBannerListener
 import com.example.presentation.chat_detail.components.MessageBox
 import com.example.presentation.chat_detail.components.MessageList
 import com.example.presentation.chat_detail.components.PaginationScrollListener
@@ -58,6 +68,7 @@ import com.example.presentation.util.UiText
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,6 +88,9 @@ fun ChatDetailRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
     ObserveAsEvents(viewModel.events) {
         myLogger.debug("ObserveAsEvents $it")
         when (it) {
@@ -86,7 +100,9 @@ fun ChatDetailRoot(
             }
 
             ChatDetailEvent.OnNewMessage -> {
-                //TODO: auto scroll to bottom
+                scope.launch {
+                    listState.animateScrollToItem(0)
+                }
             }
         }
     }
@@ -97,7 +113,6 @@ fun ChatDetailRoot(
 
 // Use an empty state as a stub to satisfy the required argument
     val navState = rememberNavigationEventState(NavigationEventInfo.None)
-    val scope = rememberCoroutineScope()
 
     NavigationBackHandler(
         state = navState,
@@ -135,12 +150,15 @@ fun ChatDetailRoot(
         onAction = {
             when (it) {
                 ChatDetailAction.OnChatMembersClick -> onChatMembersClick()
+                ChatDetailAction.OnBackClick -> onBack()
+
                 else -> Unit
             }
             viewModel.onAction(it)
         },
         isDetailPresent = isDetailPresent,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
+        listState = listState,
     )
 }
 
@@ -149,18 +167,38 @@ fun ChatDetailScreen(
     state: ChatDetailState,
     isDetailPresent: Boolean,
     snackbarHostState: SnackbarHostState,
+    listState: LazyListState,
     onAction: (ChatDetailAction) -> Unit,
     myLogger: MyLogger = KermitLogger
 ) {
     val configuration = currentDeviceConfiguration()
-    val listState = rememberLazyListState()
-
 
     val realMessageItemCount = remember(state.messages) {
         state.messages.filter {
             it is MessageUi.LocalUserMessage || it is MessageUi.OtherUserMessage
         }.size
     }
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.firstVisibleItemIndex to listState.layoutInfo.totalItemsCount
+        }.filter { (firstVisibleItemIndex, totalItemsCount) ->
+            firstVisibleItemIndex >= 0 && totalItemsCount > 0
+        }.collect { (firstVisibleItemIndex, _) ->
+            onAction(ChatDetailAction.OnFirstVisibleIndexChanged(firstVisibleItemIndex))
+        }
+    }
+    MessageBannerListener(
+        lazyListState = listState,
+        messages = state.messages,
+        isBannerVisible = state.bannerState.isVisible,
+        onShowBanner = {
+            onAction(ChatDetailAction.OnTopVisibleIndexChanged(it))
+        },
+        onHide = {
+            onAction(ChatDetailAction.OnHideBanner)
+        }
+
+    )
     PaginationScrollListener(
         lazyListState = listState,
         itemCount = realMessageItemCount,
@@ -170,7 +208,10 @@ fun ChatDetailScreen(
             onAction(ChatDetailAction.OnScrollToTop)
         }
     )
-
+    var headerHeight by remember {
+        mutableStateOf(0.dp)
+    }
+    val density = LocalDensity.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -195,6 +236,7 @@ fun ChatDetailScreen(
                     }
                 )
         ) {
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -211,7 +253,12 @@ fun ChatDetailScreen(
                         )
                     } else {
                         myLogger.debug("EmptySection ChatHeader ${state.chat}")
-                        ChatHeader {
+                        ChatHeader(
+                            modifier = Modifier
+                                .onSizeChanged {
+                                    headerHeight = with(density) { it.height.toDp() }
+                                }
+                        ) {
                             ChatDetailHeader(
                                 chatUi = state.chat,
                                 isDetailPresent = isDetailPresent,
@@ -280,9 +327,22 @@ fun ChatDetailScreen(
                     }
                 }
             }
+            AnimatedVisibility(
+                visible = state.bannerState.isVisible,
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = headerHeight + 16.dp),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                if (state.bannerState.formattedDate != null) {
+                    DateChip(
+                        date = state.bannerState.formattedDate.asString()
+                    )
+                }
+            }
         }
     }
 }
+
 
 @Composable
 private fun DynamicCornerColumn(
@@ -364,7 +424,8 @@ private fun Preview() {
             ),
             onAction = {},
             isDetailPresent = false,
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            listState = rememberLazyListState(),
         )
     }
 }
