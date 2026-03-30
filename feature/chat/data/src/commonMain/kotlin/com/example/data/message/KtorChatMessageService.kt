@@ -20,7 +20,7 @@ class KtorChatMessageService(
         before: String?
     ): CustomResult<List<ChatMessage>, DataError.Remote> {
         return httpClient.get<List<ChatMessageDto>>(
-            route = "/chats/$chatId/messages",
+            route = "/chat/$chatId/messages",
             queryParams = buildMap {
                 this["pageSize"] = ChatMessageConstants.PAGE_SIZE
                 if (before != null) {

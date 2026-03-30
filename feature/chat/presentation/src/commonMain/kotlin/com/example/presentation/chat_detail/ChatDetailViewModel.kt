@@ -8,11 +8,15 @@ import com.example.domain.auth.SessionStorage
 import com.example.domain.chat.ChatConnectionClient
 import com.example.domain.chat.ChatRepository
 import com.example.domain.message.MessageRepository
+import com.example.domain.models.ChatMessage
 import com.example.domain.models.ConnectionState
 import com.example.domain.models.OutgoingNewMessage
+import com.example.domain.util.DataErrorException
+import com.example.domain.util.Paginator
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
 import com.example.presentation.mappers.toUi
+import com.example.presentation.mappers.toUiList
 import com.example.presentation.model.MessageUi
 import com.example.presentation.util.toUiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,8 +49,17 @@ class ChatDetailViewModel(
     private val eventChannel = Channel<ChatDetailEvent>()
     val events = eventChannel.receiveAsFlow()
 
+    private var currentPaginator: Paginator<String?, ChatMessage>? = null
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val chatInfoFlow = _chatId
+        .onEach { chatId ->
+            if (chatId != null) {
+                setupPaginatorForChat(chatId)
+            } else {
+                currentPaginator = null
+            }
+        }
         .flatMapLatest {
             if (it != null) {
                 chatRepository.getChatInfoById(it)
@@ -64,9 +77,7 @@ class ChatDetailViewModel(
         }
         currentState.copy(
             chat = chatInfo.chat.toUi(authInfo.user.id),
-            messages = chatInfo.messages.map {
-                it.toUi(authInfo.user.id)
-            }
+            messages = chatInfo.messages.toUiList(authInfo.user.id)
         )
     }
 
@@ -103,8 +114,57 @@ class ChatDetailViewModel(
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
-            ChatDetailAction.OnScrollToTop -> {}
+            ChatDetailAction.OnScrollToTop -> onScrollToTop()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+            ChatDetailAction.OnRetryPaginationClick -> retryPagination()
+        }
+    }
+
+    private fun retryPagination() = loadNextItems()
+
+    private fun onScrollToTop() = loadNextItems()
+
+    private fun loadNextItems() {
+        viewModelScope.launch {
+            currentPaginator?.loadNextItems()
+        }
+    }
+
+    private fun setupPaginatorForChat(chatId: String) {
+        currentPaginator = Paginator(
+            initialKey = null,
+            onLoadUpdated = { isPaging ->
+                _state.update {
+                    it.copy(
+                        isPaginationLoading = isPaging
+                    )
+                }
+            },
+            onRequest = { beforeTimStamp ->
+                messageRepository.fetchMessages(chatId, beforeTimStamp)
+            },
+            getNextKey = { messages ->
+                messages.minOfOrNull { it.createdAt }?.toString()
+            },
+            onError = { error ->
+                if (error is DataErrorException) {
+                    _state.update { it.copy(paginationError = error.error.toUiText()) }
+                }
+            },
+            onSuccess = { messages, _ ->
+                _state.update {
+                    it.copy(
+                        endReached = messages.isEmpty(),
+                        paginationError = null
+                    )
+                }
+            }
+        )
+        _state.update {
+            it.copy(
+                endReached = false,
+                isPaginationLoading = false
+            )
         }
     }
 
@@ -223,9 +283,7 @@ class ChatDetailViewModel(
         connectionClient.connectionState
             .onEach { connectionState ->
                 if (connectionState == ConnectionState.CONNECTED) {
-                    _chatId.value?.let {
-                        messageRepository.fetchMessages(it)
-                    }
+                    currentPaginator?.loadNextItems()
                 }
                 _state.update {
                     it.copy(

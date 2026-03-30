@@ -141,6 +141,7 @@ class KtorWebSocketConnector(
                     .retryWhen { cause, attempt ->
                         myLogger.info("KtorWebSocketConnector retryWhen attempt: $attempt, cause: ${cause.message}")
                         val shouldRetry = connectionRetryHandler.shouldRetry(cause, attempt)
+                        myLogger.info("KtorWebSocketConnector shouldRetry: $shouldRetry")
                         if (shouldRetry) {
                             _connectionState.update { ConnectionState.CONNECTING }
                             connectionRetryHandler.applyRetryDelay(attempt)
@@ -186,7 +187,7 @@ class KtorWebSocketConnector(
                         }
 
                         is Frame.Ping -> {
-                            myLogger.debug("KtorWebSocketConnector Received ping")
+                            myLogger.info("KtorWebSocketConnector Received ping")
                             session.send(Frame.Pong(frame.data))
                         }
 
@@ -213,6 +214,7 @@ class KtorWebSocketConnector(
             return CustomResult.Failure(DataError.Connection.NOT_CONNECTED)
         }
         return try {
+            myLogger.info("KtorWebSocketConnector send message: $message")
             currentSession?.send(message)
             CustomResult.Success(Unit)
         } catch (e: Exception) {

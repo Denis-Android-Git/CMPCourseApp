@@ -48,6 +48,7 @@ import com.example.domain.models.DeliveryStatus
 import com.example.presentation.chat_detail.components.ChatDetailHeader
 import com.example.presentation.chat_detail.components.MessageBox
 import com.example.presentation.chat_detail.components.MessageList
+import com.example.presentation.chat_detail.components.PaginationScrollListener
 import com.example.presentation.components.ChatHeader
 import com.example.presentation.components.EmptySection
 import com.example.presentation.model.ChatUi
@@ -153,6 +154,23 @@ fun ChatDetailScreen(
 ) {
     val configuration = currentDeviceConfiguration()
     val listState = rememberLazyListState()
+
+
+    val realMessageItemCount = remember(state.messages) {
+        state.messages.filter {
+            it is MessageUi.LocalUserMessage || it is MessageUi.OtherUserMessage
+        }.size
+    }
+    PaginationScrollListener(
+        lazyListState = listState,
+        itemCount = realMessageItemCount,
+        isLoading = state.isPaginationLoading,
+        isEndReached = state.endReached,
+        onNearTop = {
+            onAction(ChatDetailAction.OnScrollToTop)
+        }
+    )
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -218,7 +236,12 @@ fun ChatDetailScreen(
                                     ChatDetailAction.OnDeleteMessage(it)
                                 )
                             },
-                            modifier = Modifier.fillMaxWidth().weight(1f)
+                            modifier = Modifier.fillMaxWidth().weight(1f),
+                            paginationError = state.paginationError?.asString(),
+                            isPaginationLoading = state.isPaginationLoading,
+                            onRetryPagination = {
+                                onAction(ChatDetailAction.OnRetryPaginationClick)
+                            }
                         )
                         AnimatedVisibility(
                             visible = !configuration.isWideScreen

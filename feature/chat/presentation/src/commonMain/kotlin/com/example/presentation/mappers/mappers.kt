@@ -8,6 +8,26 @@ import com.example.domain.models.MessageWithSender
 import com.example.presentation.model.ChatUi
 import com.example.presentation.model.MessageUi
 import com.example.presentation.util.DateUtil
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
+
+fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
+    return this
+        .sortedByDescending {
+            it.message.createdAt
+        }
+        .groupBy {
+            it.message.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
+        .flatMap { (date, messages) ->
+            messages.map { it.toUi(localUserId) } + MessageUi.DateSeparator(
+                id = date.toString(),
+                date = DateUtil.formatDateSeparator(date)
+            )
+        }
+
+}
 
 fun ChatParticipant.toUi() = ChatParticipantUi(
     id = userId,

@@ -22,6 +22,8 @@ actual class ConnectionErrorHandler {
             }
         } else if (error is IOSNetworkCancellationException) {
             ConnectionState.ERROR_NETWORK
+        } else if (error.isPingTimeout()) {
+            ConnectionState.ERROR_NETWORK
         } else ConnectionState.ERROR_UNKNOWN
     }
 
@@ -40,6 +42,12 @@ actual class ConnectionErrorHandler {
                     cause = cause
                 )
             }
+            if (error.isPingTimeout()) {
+                return IOSNetworkCancellationException(
+                    message = "Ping timed out",
+                    cause = cause
+                )
+            }
         }
 
         return error
@@ -47,6 +55,10 @@ actual class ConnectionErrorHandler {
 
     actual fun isRetryableError(error: Throwable): Boolean {
         if (error is IOSNetworkCancellationException) {
+            return true
+        }
+
+        if (error.isPingTimeout()) {
             return true
         }
 
@@ -65,6 +77,12 @@ actual class ConnectionErrorHandler {
 
         return exceptionNsError ?: causeNsError
     }
+
+    private fun Throwable.isPingTimeout(): Boolean {
+        return message?.contains("Ping timeout", ignoreCase = true) == true ||
+                cause?.message?.contains("Ping timeout", ignoreCase = true) == true
+    }
+
 
     private fun Throwable.toNSError(): NSError? {
         return message?.let { message ->

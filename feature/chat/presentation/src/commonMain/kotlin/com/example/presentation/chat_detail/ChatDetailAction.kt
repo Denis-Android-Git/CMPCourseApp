@@ -5,6 +5,8 @@ import com.example.presentation.model.MessageUi
 sealed interface ChatDetailAction {
     data object OnSendMessageClick : ChatDetailAction
     data object OnScrollToTop : ChatDetailAction
+    data object OnRetryPaginationClick : ChatDetailAction
+
     data class OnSelectChat(val chatId: String?) : ChatDetailAction
     data class OnDeleteMessage(val message: MessageUi.LocalUserMessage) : ChatDetailAction
     data class OnMessageLongClick(val message: MessageUi.LocalUserMessage) : ChatDetailAction
