@@ -91,18 +91,19 @@ fun ChatDetailRoot(
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    ObserveAsEvents(viewModel.events) {
-        myLogger.debug("ObserveAsEvents $it")
-        when (it) {
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
             ChatDetailEvent.OnChatLeft -> onBack()
-            is ChatDetailEvent.OnError -> {
-                snackbarHostState.showSnackbar(it.error.asStringAsync())
-            }
-
             ChatDetailEvent.OnNewMessage -> {
                 scope.launch {
+                    delay(200)
+                    myLogger.info("New message received, scrolling to top")
                     listState.animateScrollToItem(0)
                 }
+            }
+
+            is ChatDetailEvent.OnError -> {
+                snackbarHostState.showSnackbar(event.error.asStringAsync())
             }
         }
     }
