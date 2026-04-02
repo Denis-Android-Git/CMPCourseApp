@@ -53,11 +53,21 @@ class ChatListScreenViewModel(
                     )
                 }
             }
+
             ChatListScreenAction.OnConfirmLogoutClicked -> {}
             ChatListScreenAction.OnDismissLogoutDialog -> {}
-            ChatListScreenAction.OnDismissUserMenu -> {}
+            ChatListScreenAction.OnProfileSettingsClicked,
+            ChatListScreenAction.OnLogoutClicked,
+            ChatListScreenAction.OnDismissUserMenu -> {
+                _state.update { it.copy(isUserMenuOpen = false) }
+
+            }
+
             ChatListScreenAction.OnLogoutClicked -> {}
-            ChatListScreenAction.OnUsrAvatarClicked -> {}
+            ChatListScreenAction.OnUsrAvatarClicked -> {
+                _state.update { it.copy(isUserMenuOpen = true) }
+            }
+
             ChatListScreenAction.OnCreateChatClicked -> {}
             ChatListScreenAction.OnProfileSettingsClicked -> {}
         }

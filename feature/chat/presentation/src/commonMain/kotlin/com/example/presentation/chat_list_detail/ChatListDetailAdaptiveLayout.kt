@@ -24,6 +24,7 @@ import com.example.presentation.chat_detail.ChatDetailRoot
 import com.example.presentation.chat_list.ChatListScreenRoot
 import com.example.presentation.create_chat.CreateChatRoot
 import com.example.presentation.manage_chat.ManageChatRoot
+import com.example.presentation.profile.ProfileRoot
 import com.example.presentation.util.DialogScopedViewmodelScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -157,6 +158,15 @@ fun ChatListDetailAdaptiveLayoutScreen(
             chatId = state.selectedChatId,
             onDismiss = onDismiss,
             onMembersAdded = {
+                onDismiss()
+            }
+        )
+    }
+    DialogScopedViewmodelScreen(
+        isVisible = state.dialogState is DialogState.Profile
+    ) {
+        ProfileRoot(
+            onDismiss = {
                 onDismiss()
             }
         )

@@ -19,9 +19,9 @@ import com.example.designsystem.theme.extended
 @Composable
 fun MyIconButton(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-    onClick: () -> Unit
-) {
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+    ) {
     OutlinedIconButton(
         onClick = onClick,
         modifier = modifier.size(45.dp),
