@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,6 +38,7 @@ import cmpcourseapp.feature.chat.presentation.generated.resources.delete_profile
 import cmpcourseapp.feature.chat.presentation.generated.resources.email
 import cmpcourseapp.feature.chat.presentation.generated.resources.new_password
 import cmpcourseapp.feature.chat.presentation.generated.resources.password
+import cmpcourseapp.feature.chat.presentation.generated.resources.password_change_successful
 import cmpcourseapp.feature.chat.presentation.generated.resources.password_hint
 import cmpcourseapp.feature.chat.presentation.generated.resources.profile_image
 import cmpcourseapp.feature.chat.presentation.generated.resources.save
@@ -50,6 +53,7 @@ import com.example.designsystem.components.dialogs.DeleteDialog
 import com.example.designsystem.components.textfields.MyPasswordTextField
 import com.example.designsystem.components.textfields.MyTextField
 import com.example.designsystem.theme.MyTheme
+import com.example.designsystem.theme.extended
 import com.example.presentation.profile.components.ProfileHeaderSection
 import com.example.presentation.profile.components.ProfileSection
 import com.example.presentation.util.DeviceConfiguration
@@ -121,6 +125,7 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+
                     MyButton(
                         text = stringResource(cmpcourseapp.feature.chat.presentation.generated.resources.Res.string.upload_image),
                         onClick = {
@@ -182,8 +187,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
                 },
                 placeholder = stringResource(cmpcourseapp.feature.chat.presentation.generated.resources.Res.string.current_password),
-                isError = state.currentPasswordError != null,
-                supportingText = state.currentPasswordError?.asString()
+                isError = state.newPasswordError != null,
             )
             MyPasswordTextField(
                 state = state.newPasswordTextState,
@@ -196,6 +200,15 @@ fun ProfileScreen(
                 supportingText = state.newPasswordError?.asString()
                     ?: stringResource(cmpcourseapp.feature.chat.presentation.generated.resources.Res.string.password_hint)
             )
+            if (state.isPasswordChangeSuccessful) {
+                Text(
+                    text = stringResource(cmpcourseapp.feature.chat.presentation.generated.resources.Res.string.password_change_successful),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.extended.success,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)

@@ -1,6 +1,7 @@
 package com.example.data.auth
 
 import com.example.data.auth.dto.AuthInfoSerializable
+import com.example.data.auth.dto.requests.ChangePasswordRequest
 import com.example.data.auth.dto.requests.EmailRequest
 import com.example.data.auth.dto.requests.LoginRequest
 import com.example.data.auth.dto.requests.RegisterRequest
@@ -19,7 +20,11 @@ import io.ktor.client.HttpClient
 class KtorAuthService(
     private val httpClient: HttpClient
 ) : AuthService {
-    override suspend fun register(email: String, password: String, name: String): EmptyResult<DataError.Remote> {
+    override suspend fun register(
+        email: String,
+        password: String,
+        name: String
+    ): EmptyResult<DataError.Remote> {
         return httpClient.post(
             route = "/auth/register",
             body = RegisterRequest(
@@ -48,7 +53,10 @@ class KtorAuthService(
         )
     }
 
-    override suspend fun login(email: String, password: String): CustomResult<AuthInfo, DataError.Remote> {
+    override suspend fun login(
+        email: String,
+        password: String
+    ): CustomResult<AuthInfo, DataError.Remote> {
         return httpClient.post<LoginRequest, AuthInfoSerializable>(
             route = "/auth/login",
             body = LoginRequest(
@@ -69,7 +77,10 @@ class KtorAuthService(
         )
     }
 
-    override suspend fun resetPassword(token: String, password: String): EmptyResult<DataError.Remote> {
+    override suspend fun resetPassword(
+        token: String,
+        password: String
+    ): EmptyResult<DataError.Remote> {
         return httpClient.post(
             route = "/auth/reset-password",
             body = ResetPassword(
@@ -79,4 +90,16 @@ class KtorAuthService(
         )
     }
 
+    override suspend fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/change-password",
+            body = ChangePasswordRequest(
+                oldPassword = oldPassword,
+                newPassword = newPassword
+            )
+        )
+    }
 }
