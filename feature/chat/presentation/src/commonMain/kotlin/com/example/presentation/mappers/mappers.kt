@@ -39,7 +39,8 @@ fun ChatParticipant.toUi() = ChatParticipantUi(
 fun User.toUi() = ChatParticipantUi(
     id = id,
     name = userName,
-    initials = userName.take(2).uppercase()
+    initials = userName.take(2).uppercase(),
+    imageUrl = profilePicture
 )
 
 fun MessageWithSender.toUi(

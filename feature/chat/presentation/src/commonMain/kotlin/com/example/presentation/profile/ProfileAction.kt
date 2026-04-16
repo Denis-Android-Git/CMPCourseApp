@@ -5,7 +5,7 @@ sealed interface ProfileAction {
     data object OnUploadImage : ProfileAction
     data object OnErrorImagePicker : ProfileAction
     data class OnUriSelected(val uri: String) : ProfileAction
-    class OnImageSelected(val bytes: ByteArray) : ProfileAction
+    class OnImageSelected(val bytes: ByteArray, val mimeType: String?) : ProfileAction
     data object OnDeletePicture : ProfileAction
     data object OnConfirmDeletePicture : ProfileAction
     data object OnDismissConfirmDeleteDialog : ProfileAction

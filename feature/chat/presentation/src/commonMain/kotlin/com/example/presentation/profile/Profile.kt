@@ -56,6 +56,7 @@ import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import com.example.presentation.profile.components.ProfileHeaderSection
 import com.example.presentation.profile.components.ProfileSection
+import com.example.presentation.profile.mediapicker.rememberImagePickerLauncher
 import com.example.presentation.util.DeviceConfiguration
 import com.example.presentation.util.clearFocusOnTap
 import com.example.presentation.util.currentDeviceConfiguration
@@ -70,6 +71,15 @@ fun ProfileRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val launcher = rememberImagePickerLauncher {
+        viewModel.onAction(
+            ProfileAction.OnImageSelected(
+                it.bytes,
+                it.mimeType
+            )
+        )
+    }
+
     AdaptiveDialog(
         onDismissRequest = onDismiss
     ) {
@@ -78,6 +88,10 @@ fun ProfileRoot(
             onAction = {
                 when (it) {
                     is ProfileAction.OnDismiss -> onDismiss()
+                    is ProfileAction.OnUploadImage -> {
+                        launcher.launch()
+                    }
+
                     else -> Unit
                 }
                 viewModel.onAction(it)

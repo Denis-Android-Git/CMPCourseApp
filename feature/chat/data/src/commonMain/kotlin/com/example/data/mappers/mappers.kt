@@ -3,6 +3,7 @@ package com.example.data.mappers
 import com.example.data.dto.ChatDto
 import com.example.data.dto.ChatMessageDto
 import com.example.data.dto.ChatParticipantDto
+import com.example.data.dto.response.ProfilePictureUploadUrlsResponse
 import com.example.data.dto.ws.IncomingWsDto
 import com.example.data.dto.ws.OutgoingWsDto
 import com.example.database.entities.ChatEntity
@@ -18,6 +19,7 @@ import com.example.domain.models.ChatParticipant
 import com.example.domain.models.DeliveryStatus
 import com.example.domain.models.MessageWithSender
 import com.example.domain.models.OutgoingNewMessage
+import com.example.domain.models.ProfilePictureUploadUrls
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -163,6 +165,12 @@ fun OutgoingWsDto.NewMessage.toEntity(
     content = content,
     timeStamp = Clock.System.now().toEpochMilliseconds(),
     deliveryStatus = deliveryStatus.name
+)
+
+fun ProfilePictureUploadUrlsResponse.toDomain() = ProfilePictureUploadUrls(
+    uploadUrl = uploadUrl,
+    publicUrl = publicUrl,
+    headers = headers
 )
 
 

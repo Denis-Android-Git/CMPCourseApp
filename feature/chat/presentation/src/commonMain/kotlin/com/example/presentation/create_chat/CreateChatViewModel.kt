@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
 import cmpcourseapp.feature.chat.presentation.generated.resources.error_participant_not_found
-import com.example.domain.chat.ChatParticipantService
+import com.example.domain.participant.ChatParticipantService
 import com.example.domain.chat.ChatRepository
 import com.example.domain.util.DataError
 import com.example.domain.util.onFailure
