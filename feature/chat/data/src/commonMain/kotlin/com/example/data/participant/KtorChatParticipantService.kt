@@ -4,26 +4,22 @@ import com.example.data.dto.ChatParticipantDto
 import com.example.data.dto.request.ConfirmProfilePictureRequest
 import com.example.data.dto.response.ProfilePictureUploadUrlsResponse
 import com.example.data.mappers.toDomain
-import com.example.data.network.constructRoute
+import com.example.data.network.delete
 import com.example.data.network.get
 import com.example.data.network.post
-import com.example.data.network.put
 import com.example.data.network.safeCall
-import com.example.domain.participant.ChatParticipantService
 import com.example.domain.models.ChatParticipant
 import com.example.domain.models.ProfilePictureUploadUrls
+import com.example.domain.participant.ChatParticipantService
 import com.example.domain.util.CustomResult
 import com.example.domain.util.DataError
 import com.example.domain.util.EmptyResult
 import com.example.domain.util.map
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
-import io.ktor.client.request.parameter
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 class KtorChatParticipantService(
     private val httpClient: HttpClient
@@ -77,6 +73,12 @@ class KtorChatParticipantService(
         return httpClient.post<ConfirmProfilePictureRequest, Unit>(
             route = "/participants/confirm-profile-picture",
             body = ConfirmProfilePictureRequest(publicUrl)
+        )
+    }
+
+    override suspend fun deleteProfilePicture(): EmptyResult<DataError.Remote> {
+        return httpClient.delete(
+            route = "/participants/profile-picture"
         )
     }
 }

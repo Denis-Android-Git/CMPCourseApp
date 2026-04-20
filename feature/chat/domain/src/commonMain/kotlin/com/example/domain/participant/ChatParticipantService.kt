@@ -24,4 +24,6 @@ interface ChatParticipantService {
     suspend fun confirmPictureUpload(
         publicUrl: String
     ): EmptyResult<DataError.Remote>
+
+    suspend fun deleteProfilePicture(): EmptyResult<DataError.Remote>
 }

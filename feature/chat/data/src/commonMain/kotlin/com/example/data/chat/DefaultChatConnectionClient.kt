@@ -95,6 +95,7 @@ class WsChatConnectionClient(
             userId = message.userId,
             newUrl = message.newUrl
         )
+
         val authInfo = sessionStorage.observeAuthInfo().firstOrNull()
         if (authInfo?.user?.id == message.userId) {
             sessionStorage.set(

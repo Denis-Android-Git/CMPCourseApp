@@ -3,8 +3,6 @@ package com.example.presentation.profile
 sealed interface ProfileAction {
     data object OnDismiss : ProfileAction
     data object OnUploadImage : ProfileAction
-    data object OnErrorImagePicker : ProfileAction
-    data class OnUriSelected(val uri: String) : ProfileAction
     class OnImageSelected(val bytes: ByteArray, val mimeType: String?) : ProfileAction
     data object OnDeletePicture : ProfileAction
     data object OnConfirmDeletePicture : ProfileAction

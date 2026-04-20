@@ -69,8 +69,48 @@ class ProfileViewModel(
             is ProfileAction.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
             is ProfileAction.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
             is ProfileAction.OnImageSelected -> uploadProfilePicture(action.bytes, action.mimeType)
+            is ProfileAction.OnDeletePicture -> showDeleteConfirmation()
+            is ProfileAction.OnConfirmDeletePicture -> deleteProfilePicture()
+            is ProfileAction.OnDismissConfirmDeleteDialog -> dismissDeleteConfirmation()
             else -> Unit
         }
+    }
+
+    private fun dismissDeleteConfirmation() {
+        _state.update { it.copy(showDeleteConfirmationDialog = false) }
+    }
+
+    private fun deleteProfilePicture() {
+        if (state.value.isDeletingImage && state.value.profilePicture == null) return
+        _state.update {
+            it.copy(
+                isDeletingImage = true,
+                imageError = null,
+                showDeleteConfirmationDialog = false
+            )
+        }
+        viewModelScope.launch {
+            chatParticipantRepository.deleteProfilePicture()
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            imageError = error.toUiText(),
+                            isDeletingImage = false
+                        )
+                    }
+                }
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isDeletingImage = false
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        _state.update { it.copy(showDeleteConfirmationDialog = true) }
     }
 
     private fun uploadProfilePicture(bytes: ByteArray, mimeType: String?) {
