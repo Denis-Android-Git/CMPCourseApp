@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.convention.android.application)
     alias(libs.plugins.compose.compiler)
-   // alias(libs.plugins.google.services)
+    alias(libs.plugins.google.services)
 }
 
 dependencies {
@@ -23,5 +23,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-
+    implementation(project.dependencies.platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.koin.android)
 }

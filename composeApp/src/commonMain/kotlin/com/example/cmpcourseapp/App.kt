@@ -25,10 +25,6 @@ fun App(
 
     val mainState by mainViewModel.mainState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
-    DeepLinkListener(
-        navController = navController
-    )
-
     LaunchedEffect(mainState.isCheckingAuthStatus) {
         if (!mainState.isCheckingAuthStatus) {
             onAuthChecked()
@@ -36,7 +32,7 @@ fun App(
     }
 
     ObserveAsEvents(mainViewModel.sessionExpiredFlow) {
-        when(it) {
+        when (it) {
             is MainEvent.SessionExpired -> {
                 navController.navigate(AuthGraphRoutes.Graph) {
                     popUpTo(AuthGraphRoutes.Graph) {
@@ -56,6 +52,9 @@ fun App(
                 } else {
                     AuthGraphRoutes.Graph
                 },
+            )
+            DeepLinkListener(
+                navController = navController
             )
         }
     }

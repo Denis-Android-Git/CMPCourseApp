@@ -30,7 +30,8 @@ class ChatListScreenViewModel(
             return@combine ChatListScreenState()
         }
         currentState.copy(
-            chats = chats.map { it.toUi(authInfo.user.id) },
+            chats = chats.map {
+                it.toUi(authInfo.user.id) },
             localParticipant = authInfo.user.toUi()
         )
     }.onStart {

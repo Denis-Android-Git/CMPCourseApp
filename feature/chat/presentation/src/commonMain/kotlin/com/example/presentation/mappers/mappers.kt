@@ -65,7 +65,13 @@ fun MessageWithSender.toUi(
 }
 
 fun Chat.toUi(localParticipantId: String): ChatUi {
-    val (local, other) = memberList.partition { it.userId == localParticipantId }
+    val (local, other) = memberList.partition {
+        println("check_local_list userId = ${it.userId}, localParticipantId = $localParticipantId")
+        it.userId == localParticipantId
+    }
+
+    println("check_local_list Local List = ${local.joinToString("/n")}")
+
     return ChatUi(
         id = id,
         localParticipant = local.first().toUi(),

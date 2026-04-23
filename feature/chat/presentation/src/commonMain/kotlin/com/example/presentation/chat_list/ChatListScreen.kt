@@ -44,6 +44,8 @@ import com.example.presentation.chat_list.components.ChatListItem
 import com.example.presentation.components.EmptySection
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.presentation.permissions.CustomPermission
+import com.example.presentation.permissions.rememberPermissionController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -60,7 +62,7 @@ fun ChatListScreenRoot(
     LaunchedEffect(selectedChatId) {
         viewModel.onAction(ChatListScreenAction.OnSelectChat(selectedChatId))
     }
-    ChatListScreenScreen(
+    ChatListScreen(
         state = state,
         onAction = {
             when (it) {
@@ -77,11 +79,15 @@ fun ChatListScreenRoot(
 }
 
 @Composable
-fun ChatListScreenScreen(
+fun ChatListScreen(
     state: ChatListScreenState,
     onAction: (ChatListScreenAction) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
+    val permissionController = rememberPermissionController()
+    LaunchedEffect(true) {
+        permissionController.requestPermission(CustomPermission.NOTIFICATIONS)
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.extended.surfaceLower,
@@ -178,7 +184,7 @@ fun ChatListScreenScreen(
 @Composable
 private fun Preview() {
     MyTheme {
-        ChatListScreenScreen(
+        ChatListScreen(
             state = ChatListScreenState(),
             onAction = {},
             snackbarHostState = remember { SnackbarHostState() }

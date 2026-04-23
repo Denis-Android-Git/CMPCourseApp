@@ -3,6 +3,7 @@ plugins {
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         commonMain {
@@ -11,21 +12,22 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(libs.components.resources)
 
-                implementation(libs.material3.adaptive )
-                implementation(libs.bundles.koin.common )
-
-
+                implementation(libs.material3.adaptive)
+                implementation(libs.bundles.koin.common)
             }
         }
-        androidMain {
+
+        val mobileMain by creating {
             dependencies {
+                implementation(libs.moko.permissions)
+                implementation(libs.moko.permissions.compose)
+                implementation(libs.moko.permissions.notifications)
+            }
+            dependsOn(commonMain.get())
+        }
+        androidMain.get().dependsOn(mobileMain)
+        iosMain.get().dependsOn(mobileMain)
 
-            }
-        }
-        iosMain {
-            dependencies {
-            }
-        }
     }
 
 }
