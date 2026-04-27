@@ -21,4 +21,5 @@ interface ChatRepository {
         chatId: String,
         userIds: List<String>
     ): CustomResult<Chat, DataError.Remote>
+    suspend fun deleteAllChats()
 }

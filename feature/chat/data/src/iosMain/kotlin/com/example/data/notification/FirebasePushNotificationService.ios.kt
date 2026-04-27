@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.onStart
 import platform.Foundation.NSUserDefaults
 import platform.UIKit.UIApplication
 import platform.UIKit.registerForRemoteNotifications
-import platform.UIKit.registeredForRemoteNotifications
 
 actual class FirebasePushNotificationService :
     PushNotificationService {

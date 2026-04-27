@@ -121,7 +121,7 @@ fun ChatListDetailAdaptiveLayoutScreen(
                             navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                         }
                     },
-                    onConfirmLogoutClicked = onConfirmLogoutClicked,
+                    onSuccessfulLogout = onConfirmLogoutClicked,
                     onCreateChatClicked = onCreateChatClicked,
                     onProfileSettingsClicked = onProfileSettingsClicked,
                     selectedChatId = state.selectedChatId,

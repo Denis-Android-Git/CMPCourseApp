@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,8 @@ import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.presentation.permissions.CustomPermission
 import com.example.presentation.permissions.rememberPermissionController
+import com.example.presentation.util.ObserveAsEvents
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -53,7 +56,7 @@ fun ChatListScreenRoot(
     selectedChatId: String?,
     viewModel: ChatListScreenViewModel = koinViewModel(),
     onChatClicked: (String?) -> Unit,
-    onConfirmLogoutClicked: () -> Unit,
+    onSuccessfulLogout: () -> Unit,
     onCreateChatClicked: () -> Unit,
     onProfileSettingsClicked: () -> Unit
 ) {
@@ -62,12 +65,24 @@ fun ChatListScreenRoot(
     LaunchedEffect(selectedChatId) {
         viewModel.onAction(ChatListScreenAction.OnSelectChat(selectedChatId))
     }
+    val scope = rememberCoroutineScope()
+    ObserveAsEvents(viewModel.events) {
+        when (it) {
+            is ChatListEvent.OnLogOutError -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(it.error.asStringAsync())
+                }
+            }
+
+            ChatListEvent.OnLogOutSuccess -> onSuccessfulLogout()
+        }
+    }
     ChatListScreen(
         state = state,
         onAction = {
             when (it) {
                 is ChatListScreenAction.OnSelectChat -> onChatClicked(it.chatId)
-                ChatListScreenAction.OnConfirmLogoutClicked -> onConfirmLogoutClicked()
+                ChatListScreenAction.OnConfirmLogoutClicked -> onSuccessfulLogout()
                 ChatListScreenAction.OnCreateChatClicked -> onCreateChatClicked()
                 ChatListScreenAction.OnProfileSettingsClicked -> onProfileSettingsClicked()
                 else -> Unit
@@ -171,7 +186,7 @@ fun ChatListScreen(
             description = stringResource(Res.string.do_you_want_to_logout_desc),
             onDismissRequest = { onAction(ChatListScreenAction.OnDismissLogoutDialog) },
             onConfirm = {
-                onAction(ChatListScreenAction.OnLogoutClicked)
+                onAction(ChatListScreenAction.OnConfirmLogoutClicked)
             },
             onCancel = { onAction(ChatListScreenAction.OnDismissLogoutDialog) },
             confirmButtonText = stringResource(Res.string.logout),

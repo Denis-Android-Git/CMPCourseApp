@@ -31,4 +31,6 @@ interface AuthService {
         newPassword: String
     ): EmptyResult<DataError.Remote>
 
+    suspend fun logOut(refreshToken: String): EmptyResult<DataError.Remote>
+
 }

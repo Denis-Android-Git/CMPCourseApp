@@ -157,6 +157,10 @@ class OfflineFirstChatRepository(
             }
     }
 
+    override suspend fun deleteAllChats() {
+        myDataBase.chatDao.deleteAllChats()
+    }
+
     private suspend fun List<ChatParticipantEntity>.onlyActive(chatId: String): List<ChatParticipantEntity> {
         val activeIds = myDataBase.chatDao.getActiveParticipantsByChatId(chatId)
             .first()
