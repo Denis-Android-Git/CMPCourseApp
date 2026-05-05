@@ -9,6 +9,7 @@ object IosDeviseTokenHolder {
     val token = _token.asStateFlow()
 
     fun updateToken(token: String) {
+        println("check_ios_token - IosDeviseTokenHolder.updateToken()")
         _token.value = token
     }
 }

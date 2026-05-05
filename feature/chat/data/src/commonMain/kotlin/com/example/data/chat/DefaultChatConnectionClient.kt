@@ -87,6 +87,8 @@ class WsChatConnectionClient(
             chatRepository.fetchChatById(message.chatId)
         }
         val entity = message.toEntity()
+
+        dataBase.chatDao.updateLastActivity(entity.chatId, entity.timeStamp)
         dataBase.chatMessageDao.upsertChatMessage(entity)
     }
 

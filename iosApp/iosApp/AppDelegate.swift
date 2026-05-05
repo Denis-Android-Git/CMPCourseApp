@@ -18,18 +18,19 @@ class AppDelegate : NSObject, UIApplicationDelegate, UNUserNotificationCenterDel
             
             UNUserNotificationCenter.current().delegate = self
             Messaging.messaging().delegate = self
-            
+            print("check_ios_token: didFinishLaunchingWithOptions")
+
             return true
         }
         
         func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
             Messaging.messaging().apnsToken = deviceToken
-            
+            print("check_ios_token: didRegisterForRemoteNotificationsWithDeviceToken")
             refreshToken()
         }
         
         func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-            print("iOS: Failed to register for push notifications: \(error)")
+            print("check_ios_token: Failed to register for push notifications: \(error)")
         }
         
         func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
@@ -40,15 +41,20 @@ class AppDelegate : NSObject, UIApplicationDelegate, UNUserNotificationCenterDel
             
             UserDefaults.standard.set(token, forKey: "FCM_TOKEN")
             IosDeviceTokenHolderBridge.shared.updateToken(token: token)
+            print("check_ios_token: didReceiveRegistrationToken")
+
         }
         
         func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
             Messaging.messaging().appDidReceiveMessage(userInfo)
             completionHandler(.newData)
+            print("check_ios_token: didReceiveRemoteNotification")
         }
         
         func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([.banner])
+            print("check_ios_token: userNotificationCenter willPresent")
+
         }
         
         func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -58,7 +64,7 @@ class AppDelegate : NSObject, UIApplicationDelegate, UNUserNotificationCenterDel
                 let deepLinkUrl = "chirp://chat_detail/\(chatId)"
                 ExternalUriHandler.shared.onNewUri(uri: deepLinkUrl)
             }
-            
+            print("check_ios_token: userNotificationCenter didReceive")
             completionHandler()
         }
         
@@ -69,8 +75,10 @@ class AppDelegate : NSObject, UIApplicationDelegate, UNUserNotificationCenterDel
                     
                     UserDefaults.standard.set(fcmToken, forKey: "FCM_TOKEN")
                     IosDeviceTokenHolderBridge.shared.updateToken(token: fcmToken)
+                    print("check_ios_token: refreshToken()")
+
                 } catch {
-                    print("iOS: Error getting FCM token: \(error.localizedDescription)")
+                    print("check_ios_token: refreshToken() catch: \(error.localizedDescription)")
                 }
             }
         }

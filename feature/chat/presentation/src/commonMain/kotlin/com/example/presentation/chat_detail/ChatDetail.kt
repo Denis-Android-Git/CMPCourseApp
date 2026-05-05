@@ -111,6 +111,11 @@ fun ChatDetailRoot(
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
+    LaunchedEffect(chatId, state.messages) {
+        if (state.messages.isNotEmpty()) {
+             listState.scrollToItem(0 )
+        }
+    }
 
 // Use an empty state as a stub to satisfy the required argument
     val navState = rememberNavigationEventState(NavigationEventInfo.None)
@@ -323,7 +328,8 @@ fun ChatDetailScreen(
                             onSendMessage = {
                                 onAction(ChatDetailAction.OnSendMessageClick)
                             },
-                            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(8.dp)
                         )
                     }
                 }

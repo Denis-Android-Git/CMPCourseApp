@@ -82,7 +82,6 @@ fun ChatListScreenRoot(
         onAction = {
             when (it) {
                 is ChatListScreenAction.OnSelectChat -> onChatClicked(it.chatId)
-                ChatListScreenAction.OnConfirmLogoutClicked -> onSuccessfulLogout()
                 ChatListScreenAction.OnCreateChatClicked -> onCreateChatClicked()
                 ChatListScreenAction.OnProfileSettingsClicked -> onProfileSettingsClicked()
                 else -> Unit

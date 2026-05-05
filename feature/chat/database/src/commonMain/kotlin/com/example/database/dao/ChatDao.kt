@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatDao {
 
+    @Query("UPDATE chatentity SET lastActivityAt = :timestamp WHERE chatId = :chatId")
+    suspend fun updateLastActivity(chatId: String, timestamp: Long)
+
     @Upsert
     suspend fun upsertChat(chat: ChatEntity)
 

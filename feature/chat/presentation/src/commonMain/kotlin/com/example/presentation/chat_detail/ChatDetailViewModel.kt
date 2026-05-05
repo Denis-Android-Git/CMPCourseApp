@@ -169,13 +169,10 @@ class ChatDetailViewModel(
             return null
         }
 
-        val nearestDateSeparator = (index until messages.size)
-            .asSequence()
-            .mapNotNull { index ->
+        val nearestDateSeparator = (index until messages.size).firstNotNullOfOrNull { index ->
                 val item = messages.getOrNull(index)
-                if(item is MessageUi.DateSeparator) item.date else null
+                if (item is MessageUi.DateSeparator) item.date else null
             }
-            .firstOrNull()
 
         return when(nearestDateSeparator) {
             is UiText.MyStringResource -> {

@@ -6,6 +6,7 @@ import com.example.domain.auth.AuthService
 import com.example.domain.auth.SessionStorage
 import com.example.domain.chat.ChatRepository
 import com.example.domain.notification.DeviceTokenService
+import com.example.domain.participant.ChatParticipantRepository
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
 import com.example.presentation.mappers.toUi
@@ -25,7 +26,8 @@ class ChatListScreenViewModel(
     private val chatRepository: ChatRepository,
     private val sessionStorage: SessionStorage,
     private val deviceTokenService: DeviceTokenService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -52,6 +54,7 @@ class ChatListScreenViewModel(
     }.onStart {
         if (!hasLoadedInitialData) {
             fetchChats()
+            fetchLocalUserProfile()
             hasLoadedInitialData = true
         }
     }.stateIn(
@@ -59,6 +62,12 @@ class ChatListScreenViewModel(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = ChatListScreenState()
     )
+
+    private fun fetchLocalUserProfile() {
+        viewModelScope.launch {
+            chatParticipantRepository.fetchLocalUser()
+        }
+    }
 
     fun onAction(action: ChatListScreenAction) {
         when (action) {

@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmpcourseapp.feature.chat.presentation.generated.resources.Res
 import cmpcourseapp.feature.chat.presentation.generated.resources.group_chat
+import cmpcourseapp.feature.chat.presentation.generated.resources.only_you
 import cmpcourseapp.feature.chat.presentation.generated.resources.you
 import com.example.designsystem.components.avatar.ChatParticipantUi
 import com.example.designsystem.components.avatar.StackedAvatars
@@ -38,9 +39,11 @@ fun ChatItemHeaderRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        StackedAvatars(
-            avatars = chatUi.remoteParticipants
-        )
+        if (chatUi.remoteParticipants.isNotEmpty()) {
+            StackedAvatars(
+                avatars = chatUi.remoteParticipants
+            )
+        }
         Column(
             modifier = Modifier
                 .weight(1f),
@@ -48,7 +51,9 @@ fun ChatItemHeaderRow(
         ) {
             Text(
                 text = if (!isGroupChat) {
-                    chatUi.remoteParticipants.first().name
+                    chatUi.remoteParticipants.firstOrNull()?.name
+                        ?: stringResource(Res.string.only_you)
+
                 } else {
                     stringResource(Res.string.group_chat)
                 },
