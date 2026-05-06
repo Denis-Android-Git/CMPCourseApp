@@ -42,19 +42,28 @@ fun ChatMessageDto.toDomain() = ChatMessage(
     deliveryStatus = DeliveryStatus.SENT
 )
 
-fun ChatDto.toDomain() = Chat(
-    id = id,
-    memberList = participants.map { it.toDomain() },
-    lastActivityAt = Instant.parse(lastActivityAt),
-    lastMessage = lastMessage?.toDomain()
-)
+fun ChatDto.toDomain(): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { chatMessageDto ->
+        participants.find {
+            it.userId == chatMessageDto.senderId
+        }?.username
+    }
+    return Chat(
+        id = id,
+        memberList = participants.map { it.toDomain() },
+        lastActivityAt = Instant.parse(lastActivityAt),
+        lastMessage = lastMessage?.toDomain(),
+        lastMessageSenderUsername = lastMessageSenderUsername
+    )
+}
 
 fun ChatWithParticipants.toDomain(): Chat {
     return Chat(
         id = chat.chatId,
         memberList = participants.map { it.toDomain() },
         lastActivityAt = Instant.fromEpochMilliseconds(chat.lastActivityAt),
-        lastMessage = lastMessageView?.toDomain()
+        lastMessage = lastMessageView?.toDomain(),
+        lastMessageSenderUsername = lastMessageView?.senderUsername
     )
 }
 
@@ -88,19 +97,14 @@ fun ChatMessage.toEntity() = ChatMessageEntity(
     deliveryStatus = deliveryStatus.name
 )
 
-fun ChatMessage.toNewMessage() = OutgoingWsDto.NewMessage(
-    messageId = id,
-    chatId = chatId,
-    content = content
-)
-
 fun ChatMessage.toLastMessageView() = LastMessageView(
     messageId = id,
     chatId = chatId,
     senderId = senderId,
     content = content,
     timeStamp = createdAt.toEpochMilliseconds(),
-    deliveryStatus = deliveryStatus.name
+    deliveryStatus = deliveryStatus.name,
+    senderUsername = null
 )
 
 fun Chat.toEntity() = ChatEntity(
@@ -111,12 +115,20 @@ fun Chat.toEntity() = ChatEntity(
 fun ChatEntity.toDomain(
     participants: List<ChatParticipant>,
     lastMessage: ChatMessage? = null
-) = Chat(
-    id = chatId,
-    memberList = participants,
-    lastActivityAt = Instant.fromEpochMilliseconds(lastActivityAt),
-    lastMessage = lastMessage
-)
+): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { chatMessageDto ->
+        participants.find {
+            it.userId == chatMessageDto.senderId
+        }?.userName
+    }
+    return Chat(
+        id = chatId,
+        memberList = participants,
+        lastActivityAt = Instant.fromEpochMilliseconds(lastActivityAt),
+        lastMessage = lastMessage,
+        lastMessageSenderUsername = lastMessageSenderUsername
+    )
+}
 
 fun ChatMessageEntity.toDomain() = ChatMessage(
     id = messageId,

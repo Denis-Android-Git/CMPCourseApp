@@ -77,10 +77,6 @@ fun Chat.toUi(localParticipantId: String): ChatUi {
         localParticipant = local.first().toUi(),
         remoteParticipants = other.map { it.toUi() },
         lastMessage = lastMessage,
-        lastMessageSenderName = memberList
-            .find {
-                it.userId == lastMessage?.senderId
-            }
-            ?.userName
+        lastMessageSenderName = lastMessageSenderUsername
     )
 }
