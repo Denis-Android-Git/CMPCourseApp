@@ -13,17 +13,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmpcourseapp.feature.auth.presentation.generated.resources.Res
 import cmpcourseapp.feature.auth.presentation.generated.resources.close
+import cmpcourseapp.feature.auth.presentation.generated.resources.email_placeholder
 import cmpcourseapp.feature.auth.presentation.generated.resources.email_verified_failed
-import cmpcourseapp.feature.auth.presentation.generated.resources.email_verified_failed_desc
 import cmpcourseapp.feature.auth.presentation.generated.resources.email_verified_successfully
 import cmpcourseapp.feature.auth.presentation.generated.resources.email_verified_successfully_desc
 import cmpcourseapp.feature.auth.presentation.generated.resources.login
+import cmpcourseapp.feature.auth.presentation.generated.resources.resend_verification_email
+import cmpcourseapp.feature.auth.presentation.generated.resources.submit
+import cmpcourseapp.feature.auth.presentation.generated.resources.token_expired
+import cmpcourseapp.feature.auth.presentation.generated.resources.token_used
 import cmpcourseapp.feature.auth.presentation.generated.resources.verifying_account
 import com.example.designsystem.components.brand.FailureIcon
 import com.example.designsystem.components.brand.SuccessIcon
@@ -32,17 +39,18 @@ import com.example.designsystem.components.buttons.MyButtonStyle
 import com.example.designsystem.components.layouts.AdaptiveResultLayout
 import com.example.designsystem.components.layouts.SimpleResultLayout
 import com.example.designsystem.components.layouts.SnackBarScaffold
+import com.example.designsystem.components.textfields.MyTextField
 import com.example.designsystem.theme.MyTheme
 import com.example.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EmailVerificationScreenRoot(
     viewModel: EmailVerificationScreenViewModel = koinViewModel(),
     onLoginClick: () -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    onResendVerificationEmail: (String, Boolean) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -52,6 +60,9 @@ fun EmailVerificationScreenRoot(
             when (it) {
                 EmailVerificationScreenAction.OnLoginClick -> onLoginClick()
                 EmailVerificationScreenAction.OnCloseClick -> onCloseClick()
+                EmailVerificationScreenAction.OnResendVerificationEmail -> onResendVerificationEmail(
+                    state.emailTextFieldState.text.toString(), true
+                )
             }
             viewModel.onAction(it)
         }
@@ -61,7 +72,7 @@ fun EmailVerificationScreenRoot(
 @Composable
 fun EmailVerificationScreen(
     state: EmailVerificationScreenState,
-    onAction: (EmailVerificationScreenAction) -> Unit,
+    onAction: (EmailVerificationScreenAction) -> Unit
 ) {
     SnackBarScaffold {
         AdaptiveResultLayout {
@@ -87,10 +98,46 @@ fun EmailVerificationScreen(
                     )
                 }
 
+                state.isTokenExpired -> {
+                    SimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_failed),
+                        description = stringResource(Res.string.token_expired),
+                        icon = {
+                            Spacer(modifier = Modifier.height(32.dp))
+                            FailureIcon(
+                                modifier = Modifier.size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                        },
+                        inputField = {
+                            MyTextField(
+                                state = state.emailTextFieldState,
+                                placeholder = stringResource(Res.string.email_placeholder),
+                                keyboardType = KeyboardType.Email,
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(),
+                                title = stringResource(Res.string.resend_verification_email)
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                        },
+                        primaryButton = {
+                            MyButton(
+                                text = stringResource(Res.string.submit),
+                                onClick = {
+                                    onAction(EmailVerificationScreenAction.OnResendVerificationEmail)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                enabled = state.canResendEmail,
+                                style = MyButtonStyle.SECONDARY
+                            )
+                        }
+                    )
+                }
+
                 else -> {
                     SimpleResultLayout(
                         title = stringResource(Res.string.email_verified_failed),
-                        description = stringResource(Res.string.email_verified_failed_desc),
+                        description = stringResource(Res.string.token_used),
                         icon = {
                             Spacer(modifier = Modifier.height(32.dp))
                             FailureIcon(
@@ -122,7 +169,10 @@ private fun VerifyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator(modifier = Modifier.size(64.dp), color = MaterialTheme.colorScheme.primary)
+        CircularProgressIndicator(
+            modifier = Modifier.size(64.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
         Text(
             text = stringResource(Res.string.verifying_account),
             color = MaterialTheme.colorScheme.extended.textSecondary,
@@ -163,6 +213,19 @@ private fun PreviewFail() {
     MyTheme {
         EmailVerificationScreen(
             state = EmailVerificationScreenState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewTokenExpired() {
+    MyTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationScreenState(
+                isTokenExpired = true
+            ),
             onAction = {}
         )
     }

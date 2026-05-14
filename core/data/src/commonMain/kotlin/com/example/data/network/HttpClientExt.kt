@@ -14,6 +14,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 
 suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     route: String,
@@ -50,6 +51,7 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
         }
     }
 }
+
 suspend inline fun <reified Response : Any> HttpClient.get(
     route: String,
     queryParams: Map<String, Any> = mapOf(),
@@ -102,7 +104,15 @@ suspend inline fun <reified T> responseToResult(response: HttpResponse): CustomR
         }
 
         400 -> CustomResult.Failure(DataError.Remote.BAD_REQUEST)
-        401 -> CustomResult.Failure(DataError.Remote.UNAUTHORIZED)
+        401 -> {
+            val responseBody = response.bodyAsText()
+            when {
+                responseBody.contains("expired") -> CustomResult.Failure(DataError.Remote.TOKEN_EXPIRED)
+                responseBody.contains("used") -> CustomResult.Failure(DataError.Remote.TOKEN_USED)
+                else -> CustomResult.Failure(DataError.Remote.UNAUTHORIZED)
+            }
+        }
+
         403 -> CustomResult.Failure(DataError.Remote.FORBIDDEN)
         404 -> CustomResult.Failure(DataError.Remote.NOT_FOUND)
         408 -> CustomResult.Failure(DataError.Remote.REQUEST_TIMEOUT)

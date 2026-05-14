@@ -5,12 +5,12 @@ import com.example.domain.util.DataError
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.serialization.SerializationException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import kotlin.coroutines.coroutineContext
 
 actual suspend fun <T> platformSafeCall(
     execute: suspend () -> HttpResponse,
@@ -32,7 +32,7 @@ actual suspend fun <T> platformSafeCall(
     } catch (e: SerializationException) {
         CustomResult.Failure(DataError.Remote.SERIALIZATION_ERROR)
     } catch (e: Exception) {
-        coroutineContext.ensureActive()
+        currentCoroutineContext().ensureActive()
         CustomResult.Failure(DataError.Remote.UNKNOWN)
     }
 }

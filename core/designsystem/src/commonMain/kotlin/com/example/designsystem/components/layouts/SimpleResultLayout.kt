@@ -29,7 +29,8 @@ fun SimpleResultLayout(
     secondaryError: String? = null,
     icon: @Composable ColumnScope.() -> Unit,
     primaryButton: @Composable () -> Unit,
-    secondaryButton: (@Composable () -> Unit)? = null
+    secondaryButton: (@Composable () -> Unit)? = null,
+    inputField: (@Composable () -> Unit)? = null
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
@@ -56,6 +57,9 @@ fun SimpleResultLayout(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
+            inputField?.let {
+                it()
+            }
             primaryButton()
             secondaryButton?.let {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -66,7 +70,7 @@ fun SimpleResultLayout(
                         text = error, modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme. error
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }

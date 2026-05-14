@@ -16,6 +16,7 @@ import com.example.domain.util.onSuccess
 import com.example.presentation.util.UiText
 import com.example.presentation.util.toUiText
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -55,9 +56,10 @@ class LoginViewModel(
         .map { email -> EmailValidator.validateEmail(email) }
         .distinctUntilChanged()
 
-    private val isPasswordNotBlankFlow = snapshotFlow { state.value.passwordTextFieldState.text.toString() }
-        .map { password -> password.isNotBlank() }
-        .distinctUntilChanged()
+    private val isPasswordNotBlankFlow =
+        snapshotFlow { state.value.passwordTextFieldState.text.toString() }
+            .map { password -> password.isNotBlank() }
+            .distinctUntilChanged()
     private val isLoggingIn = state
         .map { it.isLoggingIn }
         .distinctUntilChanged()
@@ -121,19 +123,35 @@ class LoginViewModel(
                     }
                 }
                 .onFailure { error ->
-                    val errorMessage = when (error) {
-                        DataError.Remote.UNAUTHORIZED -> UiText.MyStringResource(Res.string.error_invalid_credentials)
-                        DataError.Remote.FORBIDDEN -> UiText.MyStringResource(Res.string.error_email_not_verified)
+                    when (error) {
+                        DataError.Remote.UNAUTHORIZED -> {
+                            _state.update {
+                                it.copy(
+                                    isLoggingIn = false,
+                                    error = UiText.MyStringResource(Res.string.error_invalid_credentials)
+                                )
+                            }
+                        }
+
+                        DataError.Remote.FORBIDDEN -> {
+                            _state.update {
+                                it.copy(
+                                    isLoggingIn = false,
+                                    error = UiText.MyStringResource(Res.string.error_email_not_verified)
+                                )
+                            }
+                            delay(1500)
+                            val email = state.value.emailTextFieldState.text.toString()
+                            eventChannel.send(
+                                LoginEvents.Failure(
+                                    email = email,
+                                    isNeedToResendVerification = true
+                                )
+                            )
+                        }
                         else -> error.toUiText()
-                    }
-                    _state.update {
-                        it.copy(
-                            isLoggingIn = false,
-                            error = errorMessage
-                        )
                     }
                 }
         }
     }
-
 }

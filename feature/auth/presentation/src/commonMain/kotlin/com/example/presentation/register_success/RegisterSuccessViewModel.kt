@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.auth.AuthService
+import com.example.domain.logging.MyLogger
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
 import com.example.presentation.util.toUiText
@@ -18,18 +19,29 @@ import kotlinx.coroutines.launch
 
 class RegisterSuccessViewModel(
     private val authService: AuthService,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    logger: MyLogger
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
     private val email = savedStateHandle.get<String>("email") ?: ""
+
+    private val isNeedToResendVerification =
+        savedStateHandle.get<Boolean>("isNeedToResendVerification") ?: false
+
+    init {
+        logger.info("check_resend_verification email: $email, isNeedToResendVerification: $isNeedToResendVerification")
+    }
+
     private val eventChannel = Channel<RegisterSuccessEvent>()
     val eventsFlow = eventChannel.receiveAsFlow()
     private val _state = MutableStateFlow(RegisterSuccessState(registeredEmail = email))
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                if (isNeedToResendVerification) {
+                    resendVarification()
+                }
                 hasLoadedInitialData = true
             }
         }

@@ -16,6 +16,8 @@ import cmpcourseapp.core.presentation.generated.resources.error_too_many_request
 import cmpcourseapp.core.presentation.generated.resources.error_unable_to_send_message
 import cmpcourseapp.core.presentation.generated.resources.error_unauthorized
 import cmpcourseapp.core.presentation.generated.resources.error_unknown
+import cmpcourseapp.core.presentation.generated.resources.token_expired
+import cmpcourseapp.core.presentation.generated.resources.token_used
 import com.example.domain.util.DataError
 
 fun DataError.toUiText(): UiText {
@@ -39,6 +41,8 @@ fun DataError.toUiText(): UiText {
         DataError.Remote.SERIALIZATION_ERROR -> Res.string.error_serialization
         DataError.Connection.NOT_CONNECTED -> Res.string.error_no_internet
         DataError.Connection.MESSAGE_SEND_FAILED -> Res.string.error_unable_to_send_message
+        DataError.Remote.TOKEN_EXPIRED -> Res.string.token_expired
+        DataError.Remote.TOKEN_USED -> Res.string.token_used
     }
     return UiText.MyStringResource(resource)
 }

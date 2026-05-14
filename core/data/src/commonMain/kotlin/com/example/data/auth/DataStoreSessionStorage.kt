@@ -29,9 +29,9 @@ class DataStoreSessionStorage(
     override fun observeAuthInfo(): Flow<AuthInfo?> {
         return dataStore.data.map { prefs ->
             prefs[authInfoKey]?.let {
-                myLogger.debug("Decrypted_auth_info: $it")
+                myLogger.debug("auth_info/observeAuthInfo/encryptedString: $it")
                 val decryptedString = Crypto.decrypt(it)
-                myLogger.debug("Decrypted_auth_info decryptedString: $decryptedString")
+                myLogger.debug("auth_info/observeAuthInfo/decryptedString: $decryptedString")
                 val authInfoSerializable: AuthInfoSerializable = json.decodeFromString(decryptedString)
                 authInfoSerializable.toDomain()
             }
@@ -48,7 +48,7 @@ class DataStoreSessionStorage(
         }
         val serialized = json.encodeToString(info.toSerializable())
         val encryptedString = Crypto.encrypt(serialized)
-        myLogger.debug("Decrypted_auth_info: $encryptedString")
+        myLogger.debug("auth_info/set/encryptedString: $encryptedString")
         dataStore.edit {
             it[authInfoKey] = encryptedString
         }

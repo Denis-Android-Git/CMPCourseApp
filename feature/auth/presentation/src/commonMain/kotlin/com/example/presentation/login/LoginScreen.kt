@@ -40,13 +40,15 @@ fun LoginRoot(
     viewModel: LoginViewModel = koinViewModel(),
     onLoginSuccess: () -> Unit,
     onCreateAccountClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    onEmailNotVerified: (String, Boolean) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.eventsFlow) {
         when (it) {
             is LoginEvents.Success -> onLoginSuccess()
+            is LoginEvents.Failure -> onEmailNotVerified(it.email, it.isNeedToResendVerification)
         }
     }
 

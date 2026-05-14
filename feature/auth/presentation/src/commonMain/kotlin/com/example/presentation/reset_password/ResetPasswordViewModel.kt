@@ -8,6 +8,7 @@ import cmpcourseapp.feature.auth.presentation.generated.resources.Res
 import cmpcourseapp.feature.auth.presentation.generated.resources.error_reset_password_token_invalid
 import cmpcourseapp.feature.auth.presentation.generated.resources.error_same_password
 import com.example.domain.auth.AuthService
+import com.example.domain.logging.MyLogger
 import com.example.domain.util.DataError
 import com.example.domain.util.onFailure
 import com.example.domain.util.onSuccess
@@ -27,12 +28,18 @@ import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(
     private val authService: AuthService,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    logger: MyLogger
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
     private val token = savedStateHandle.get<String>("token") ?: ""
+
+    init {
+        logger.info("uri_check token = $token")
+    }
+
     private val _state = MutableStateFlow(ResetPasswordState())
     private val isPasswordValidFlow = snapshotFlow { state.value.passwordState.text.toString() }
         .map { password -> PasswordValidator.validate(password).isValidPassword }

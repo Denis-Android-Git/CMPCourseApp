@@ -30,6 +30,19 @@ fun NavGraphBuilder.authGraph(
                 },
                 onForgotPasswordClick = {
                     navController.navigate(AuthGraphRoutes.ForgotPassword)
+                },
+                onEmailNotVerified = { email, isNeedToResendVerification ->
+                    navController.navigate(
+                        AuthGraphRoutes.RegisterSuccess(
+                            email = email,
+                            isNeedToResendVerification = isNeedToResendVerification
+                        )
+                    ) {
+                        popUpTo<AuthGraphRoutes.Register> {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -93,6 +106,19 @@ fun NavGraphBuilder.authGraph(
                         }
                         launchSingleTop = true
                     }
+                },
+                onResendVerificationEmail = { email, isNeedToResendVerification ->
+                    navController.navigate(
+                        AuthGraphRoutes.RegisterSuccess(
+                            email = email,
+                            isNeedToResendVerification = isNeedToResendVerification
+                        )
+                    ) {
+                        popUpTo<AuthGraphRoutes.Register> {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -102,10 +128,12 @@ fun NavGraphBuilder.authGraph(
         composable<AuthGraphRoutes.ResetPassword>(
             deepLinks = listOf(
                 navDeepLink {
-                    this.uriPattern = "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                    this.uriPattern =
+                        "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
                 },
                 navDeepLink {
-                    this.uriPattern = "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                    this.uriPattern =
+                        "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
                 }
             )
         ) {

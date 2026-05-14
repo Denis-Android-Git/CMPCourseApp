@@ -46,5 +46,6 @@
         It seems like the reset password link is not valid or has expired. Please request a new email.
     </string>
     <string name="error_same_password">The new password can't be equal to the old one</string>
-
+    <string name="token_expired">Email verification token has already expired.</string>
+    <string name="token_used">Email verification token is already used.</string>
 </resources>
